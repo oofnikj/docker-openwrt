@@ -10,7 +10,6 @@ function _usage {
 }
 
 function _get_phy_from_dev {
-  # test -n $IFACE || { echo "interface $IFACE not found"; exit 1; }
   if [[ -f /sys/class/net/$IFACE/phy80211/name ]] ; then
     PHY=$(cat /sys/class/net/$IFACE/phy80211/name 2>/dev/null)
   else
@@ -19,6 +18,7 @@ function _get_phy_from_dev {
   fi
 }
 
+# we need this because openwrt renames the interface
 function _get_dev_from_phy {
   for dev in /sys/class/net/*; do
     test -f $dev/phy80211/name && phy=$(cat $dev/phy80211/name 2>/dev/null)
