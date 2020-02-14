@@ -72,7 +72,7 @@ function main {
   docker inspect $CONTAINER >/dev/null 2>&1
   if [[ $? -eq 0 ]]; then
     echo "* starting container '$CONTAINER'"
-    docker start $CONTAINER
+    docker start $CONTAINER; sleep 1
     docker exec $CONTAINER /etc/init.d/network restart
   else
     echo "* creating container $CONTAINER"
