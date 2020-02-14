@@ -32,7 +32,7 @@ function _get_dev_from_phy {
 }
 
 function _cleanup {
-  echo "* cleaning up..."
+  echo -e "\n* cleaning up..."
   echo "* stopping container"
   docker stop openwrt_1 >/dev/null
   # echo "* deleting network"
@@ -55,14 +55,7 @@ function _cleanup {
   echo -ne "* finished"
 }
 
-function main {
-  test -z $IFACE && _usage
-
-  _get_phy_from_dev
-
-  echo "* setting interface '$IFACE' to unmanaged"
-  nmcli dev set $IFACE managed no
-
+function _create_or_start_container {
   echo "* setting up docker network"
   docker network create --driver bridge \
     --gateway $NET_GW \
@@ -72,8 +65,7 @@ function main {
   docker inspect $CONTAINER >/dev/null 2>&1
   if [[ $? -eq 0 ]]; then
     echo "* starting container '$CONTAINER'"
-    docker start $CONTAINER; sleep 1
-    docker exec $CONTAINER /etc/init.d/network restart
+    docker start $CONTAINER
   else
     echo "* creating container $CONTAINER"
     docker run -d \
@@ -87,12 +79,24 @@ function main {
       --hostname openwrt\
       --name $CONTAINER openwrt >/dev/null
   fi
+}
 
+function main {
+  test -z $IFACE && _usage
+
+  _get_phy_from_dev
+
+  echo "* setting interface '$IFACE' to unmanaged"
+  nmcli dev set $IFACE managed no
+
+  _create_or_start_container
+
+  echo "* moving device $PHY to docker network namespace"
   pid=$(docker inspect -f '{{.State.Pid}}' $CONTAINER)
-
   sudo iw phy "$PHY" set netns $pid
+  docker exec $CONTAINER /etc/init.d/network restart
+  
   echo "* ready"
-
 }
 
 main
