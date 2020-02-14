@@ -11,4 +11,5 @@ RUN opkg update && \
       iperf3
 COPY etc/config/network /etc/config/network
 COPY etc/config/wireless /etc/config/wireless
+COPY etc/rc.local /etc/rc.local
 CMD [ "/sbin/init" ]

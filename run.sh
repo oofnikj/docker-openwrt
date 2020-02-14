@@ -1,6 +1,7 @@
 #!/bin/bash
+set -x
 
-CONTAINER='openwrt_1'
+source .env
 IFACE=$1
 
 function _usage {
@@ -35,7 +36,9 @@ function _cleanup {
   echo "* cleaning up..."
   echo "* stopping container"
   docker stop openwrt_1 >/dev/null
-  echo -n "* restoring network interface name"
+  echo "* deleting network"
+  docker network rm $NET_NAME >/dev/null
+  echo -n "* restoring network interface name.."
   retries=10
   while [[ retries -ge 0 && -z $IFACE_NEW ]]; do
     _get_dev_from_phy $PHY
@@ -43,13 +46,13 @@ function _cleanup {
     let "retries--"
     echo -n '.'
   done
-  if [[ $retries -eq 0 ]]; then
-    echo "\nERROR: problem restoring interface name, you may need to restore it manually."
+  if [[ $retries -lt 0 ]]; then
+    echo -e "\nERROR: problem restoring interface name, you may need to restore it manually."
     exit 1
   fi
   sudo ip link set dev $IFACE_NEW down
   sudo ip link set dev $IFACE_NEW name $IFACE
-  echo "ok"
+  echo " ok"
   echo -ne "* finished"
 }
 
@@ -61,10 +64,19 @@ function main {
   echo "* setting interface '$IFACE' to unmanaged"
   nmcli dev set $IFACE managed no
 
+  echo "* setting up docker network"
+  docker network create --driver bridge \
+    --gateway $NET_GW \
+    --subnet $NET_SUBNET \
+    $NET_NAME
+
   echo "* starting container"
   docker run --rm \
-    --network=bridge \
+    --network $NET_NAME \
+    -p2222:22 \
     -p8080:80 -d \
+    --env-file .env \
+    -e WIFI_PHY=$PHY \
     --cap-add NET_ADMIN \
     --cap-add NET_RAW \
     --hostname openwrt\

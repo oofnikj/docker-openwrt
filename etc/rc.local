@@ -1,0 +1,20 @@
+# Put your custom commands here that should be executed once
+# the system init finished. By default this file does nothing.
+
+/sbin/uci batch <<EOF
+
+set network.lan.ipaddr=$NET_ADDR
+set network.lan.gateway=$NET_GW
+set network.lan.netmask=$NET_NETMASK
+
+set wireless.radio0.phy=$WIFI_PHY
+set wireless.radio0.hwmode=$WIFI_HW_MODE
+set wireless.radio0.channel=$WIFI_CHANNEL
+set wireless.wl0.ssid=$WIFI_SSID
+set wireless.wl0.encryption=$WIFI_ENCRYPTION
+set wireless.wl0.key=$WIFI_KEY 
+EOF
+/sbin/uci commit
+/etc/init.d/network restart
+
+exit 0
