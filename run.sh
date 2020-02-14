@@ -47,11 +47,12 @@ function main {
   _get_phy_from_dev
   nmcli dev set $IFACE managed no
 
-  docker run --rm -it \
+  docker run --rm \
     --network=bridge \
     -p8080:80 -d \
     --cap-add NET_ADMIN \
     --cap-add NET_RAW \
+    --hostname openwrt\
     --name $CONTAINER openwrt
 
   pid=$(docker inspect -f '{{.State.Pid}}' $CONTAINER)
@@ -62,4 +63,4 @@ function main {
 
 main
 trap "_cleanup" EXIT
-cat
+tail --pid=$pid -f /dev/null
