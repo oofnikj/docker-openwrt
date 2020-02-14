@@ -1,9 +1,23 @@
 #!/bin/bash
-set -ex
+set -x
 
 CONTAINER='openwrt_1'
 IFACE=$1
-PHY=$(cat /sys/class/net/$IFACE/phy80211/name) || { echo "interface $IFACE not found"; exit 1; }
+
+function _usage {
+  echo "$0 [interface_name]"
+  exit 1
+}
+
+function _get_phy_from_dev {
+  # test -n $IFACE || { echo "interface $IFACE not found"; exit 1; }
+  if [[ -f /sys/class/net/$IFACE/phy80211/name ]] ; then
+    PHY=$(cat /sys/class/net/$IFACE/phy80211/name 2>/dev/null)
+  else
+    echo "$IFACE is not a valid phy80211 device"
+    exit 1
+  fi
+}
 
 function _get_dev_from_phy {
   for dev in /sys/class/net/*; do
@@ -27,21 +41,25 @@ function _cleanup {
   sudo ip link set dev $IFACE_NEW name $IFACE
 }
 
+function main {
+  test -z $IFACE && _usage
 
-nmcli dev set $IFACE managed no
-# sudo iw phy $PHY interface add $IFACE_AP type managed
+  _get_phy_from_dev
+  nmcli dev set $IFACE managed no
 
-docker run --rm -it \
-  --network=bridge \
-  -p8080:80 -d \
-  --cap-add NET_ADMIN \
-  --cap-add NET_RAW \
-  --name $CONTAINER openwrt
+  docker run --rm -it \
+    --network=bridge \
+    -p8080:80 -d \
+    --cap-add NET_ADMIN \
+    --cap-add NET_RAW \
+    --name $CONTAINER openwrt
 
-pid=$(docker inspect -f '{{.State.Pid}}' $CONTAINER)
+  pid=$(docker inspect -f '{{.State.Pid}}' $CONTAINER)
 
-sudo iw phy "$PHY" set netns $pid
+  sudo iw phy "$PHY" set netns $pid
 
+}
 
+main
 trap "_cleanup" EXIT
 cat
