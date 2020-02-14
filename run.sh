@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 source .env
 IFACE=$1
@@ -36,10 +35,10 @@ function _cleanup {
   echo "* cleaning up..."
   echo "* stopping container"
   docker stop openwrt_1 >/dev/null
-  echo "* deleting network"
-  docker network rm $NET_NAME >/dev/null
+  # echo "* deleting network"
+  # docker network rm $NET_NAME >/dev/null
   echo -n "* restoring network interface name.."
-  retries=10
+  retries=15
   while [[ retries -ge 0 && -z $IFACE_NEW ]]; do
     _get_dev_from_phy $PHY
     sleep 1
@@ -68,19 +67,26 @@ function main {
   docker network create --driver bridge \
     --gateway $NET_GW \
     --subnet $NET_SUBNET \
-    $NET_NAME
+      $NET_NAME 2>/dev/null
 
-  echo "* starting container"
-  docker run --rm \
-    --network $NET_NAME \
-    -p2222:22 \
-    -p8080:80 -d \
-    --env-file .env \
-    -e WIFI_PHY=$PHY \
-    --cap-add NET_ADMIN \
-    --cap-add NET_RAW \
-    --hostname openwrt\
-    --name $CONTAINER openwrt >/dev/null
+  docker inspect $CONTAINER >/dev/null 2>&1
+  if [[ $? -eq 0 ]]; then
+    echo "* starting container '$CONTAINER'"
+    docker start $CONTAINER
+    docker exec $CONTAINER /etc/init.d/network restart
+  else
+    echo "* creating container $CONTAINER"
+    docker run -d \
+      --network $NET_NAME \
+      -p2222:22 \
+      -p8080:80 \
+      --env-file .env \
+      -e WIFI_PHY=$PHY \
+      --cap-add NET_ADMIN \
+      --cap-add NET_RAW \
+      --hostname openwrt\
+      --name $CONTAINER openwrt >/dev/null
+  fi
 
   pid=$(docker inspect -f '{{.State.Pid}}' $CONTAINER)
 
