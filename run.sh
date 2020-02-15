@@ -57,10 +57,16 @@ function _cleanup {
 
 function _create_or_start_container {
   echo "* setting up docker network"
-  docker network create --driver bridge \
+  docker network create --driver macvlan \
+    -o parent=$NET_PARENT \
     --gateway $NET_GW \
     --subnet $NET_SUBNET \
       $NET_NAME 2>/dev/null
+
+  sudo ip link add macvlan0 link $NET_PARENT type macvlan mode bridge
+  sudo ip addr add $NET_HOST/24 dev macvlan0
+  sudo ip link set macvlan0 up
+  sudo ip route add $NET_ADDR/32 dev macvlan0
 
   docker inspect $CONTAINER >/dev/null 2>&1
   if [[ $? -eq 0 ]]; then
