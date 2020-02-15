@@ -17,40 +17,10 @@ function _get_phy_from_dev {
   fi
 }
 
-# we need this because openwrt renames the interface
-function _get_dev_from_phy {
-  for dev in /sys/class/net/*; do
-    test -f $dev/phy80211/name && phy=$(cat $dev/phy80211/name 2>/dev/null)
-    if [[ "$phy" = "$1" ]]; then
-      IFACE_NEW=$(basename $dev)
-      break
-    else
-      IFACE_NEW=''
-    fi
-  done
-}
-
 function _cleanup {
   echo -e "\n* cleaning up..."
   echo "* stopping container"
   docker stop openwrt_1 >/dev/null
-  # echo "* deleting network"
-  # docker network rm $NET_NAME >/dev/null
-  # echo -n "* restoring network interface name.."
-  # retries=15
-  # while [[ retries -ge 0 && -z $IFACE_NEW ]]; do
-  #   _get_dev_from_phy $WIFI_PHY
-  #   sleep 1
-  #   let "retries--"
-  #   echo -n '.'
-  # done
-  # if [[ $retries -lt 0 ]]; then
-  #   echo -e "\nERROR: problem restoring interface name, you may need to restore it manually."
-  #   exit 1
-  # fi
-  # sudo ip link set dev $IFACE_NEW down
-  # sudo ip link set dev $IFACE_NEW name $WIFI_IFACE
-  # echo " ok"
   echo -ne "* finished"
 }
 
