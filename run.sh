@@ -36,7 +36,7 @@ function _gen_config {
   set +a
 }
 
-function _create_or_start_container {
+function _init_network {
   echo "* setting up docker network"
   docker network create --driver macvlan \
     -o parent=$NET_PARENT \
@@ -48,7 +48,9 @@ function _create_or_start_container {
   sudo ip addr add $NET_HOST/24 dev macvlan0
   sudo ip link set macvlan0 up
   sudo ip route add $NET_ADDR/32 dev macvlan0
+}
 
+function _create_or_start_container {
   docker inspect $CONTAINER >/dev/null 2>&1
   if [[ $? -eq 0 ]]; then
     echo "* starting container '$CONTAINER'"
@@ -74,7 +76,8 @@ function main {
 
   echo "* setting interface '$WIFI_IFACE' to unmanaged"
   nmcli dev set $WIFI_IFACE managed no
-
+  
+  _init_network
   _create_or_start_container
 
   echo "* moving device $WIFI_PHY to docker network namespace"
