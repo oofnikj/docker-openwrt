@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source .env
-IFACE=$1
+IFACE=$WIFI_IFACE
 
 function _usage {
   echo "$0 [interface_name]"
@@ -95,7 +95,7 @@ function main {
   pid=$(docker inspect -f '{{.State.Pid}}' $CONTAINER)
   sudo iw phy "$PHY" set netns $pid
   docker exec $CONTAINER /etc/init.d/network restart
-  
+
   echo "* ready"
 }
 
