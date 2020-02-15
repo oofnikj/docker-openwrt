@@ -9,7 +9,6 @@ RUN opkg update && \
       iw-full \
       kmod-mac80211 \
       iperf3
-COPY etc/config/network /etc/config/network
-COPY etc/config/wireless /etc/config/wireless
-COPY etc/rc.local /etc/rc.local
+COPY etc/config/network.tpl /etc/config/network
+COPY etc/config/wireless.tpl /etc/config/wireless
 CMD [ "/sbin/init" ]

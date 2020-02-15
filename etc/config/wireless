@@ -1,7 +1,0 @@
-config 'wifi-device'    'radio0'
-    option 'type'       'mac80211'
-
-config 'wifi-iface'     'wl0'
-    option 'device'     'radio0'
-    option 'network'    'lan'
-    option 'mode'       'ap'

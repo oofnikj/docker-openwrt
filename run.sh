@@ -1,7 +1,6 @@
 #!/bin/bash
 
 source .env
-IFACE=$WIFI_IFACE
 
 function _usage {
   echo "$0 [interface_name]"
@@ -9,11 +8,11 @@ function _usage {
 }
 
 function _get_phy_from_dev {
-  if [[ -f /sys/class/net/$IFACE/phy80211/name ]] ; then
-    PHY=$(cat /sys/class/net/$IFACE/phy80211/name 2>/dev/null)
-    echo "* got '$PHY' for device '$IFACE'"
+  if [[ -f /sys/class/net/$WIFI_IFACE/phy80211/name ]] ; then
+    WIFI_PHY=$(cat /sys/class/net/$WIFI_IFACE/phy80211/name 2>/dev/null)
+    echo "* got '$WIFI_PHY' for device '$WIFI_IFACE'"
   else
-    echo "$IFACE is not a valid phy80211 device"
+    echo "$WIFI_IFACE is not a valid phy80211 device"
     exit 1
   fi
 }
@@ -37,22 +36,34 @@ function _cleanup {
   docker stop openwrt_1 >/dev/null
   # echo "* deleting network"
   # docker network rm $NET_NAME >/dev/null
-  echo -n "* restoring network interface name.."
-  retries=15
-  while [[ retries -ge 0 && -z $IFACE_NEW ]]; do
-    _get_dev_from_phy $PHY
-    sleep 1
-    let "retries--"
-    echo -n '.'
-  done
-  if [[ $retries -lt 0 ]]; then
-    echo -e "\nERROR: problem restoring interface name, you may need to restore it manually."
-    exit 1
-  fi
-  sudo ip link set dev $IFACE_NEW down
-  sudo ip link set dev $IFACE_NEW name $IFACE
-  echo " ok"
+  # echo -n "* restoring network interface name.."
+  # retries=15
+  # while [[ retries -ge 0 && -z $IFACE_NEW ]]; do
+  #   _get_dev_from_phy $WIFI_PHY
+  #   sleep 1
+  #   let "retries--"
+  #   echo -n '.'
+  # done
+  # if [[ $retries -lt 0 ]]; then
+  #   echo -e "\nERROR: problem restoring interface name, you may need to restore it manually."
+  #   exit 1
+  # fi
+  # sudo ip link set dev $IFACE_NEW down
+  # sudo ip link set dev $IFACE_NEW name $WIFI_IFACE
+  # echo " ok"
   echo -ne "* finished"
+}
+
+function _gen_config {
+  echo "* generating network config"
+  set -a
+  source .env
+  _get_phy_from_dev
+  for file in etc/config/*.tpl; do
+    envsubst < ${file} > ${file%.tpl}.gen
+    docker cp ${file%.tpl}.gen $CONTAINER:/${file%.tpl}
+  done
+  set +a
 }
 
 function _create_or_start_container {
@@ -74,33 +85,31 @@ function _create_or_start_container {
     docker start $CONTAINER
   else
     echo "* creating container $CONTAINER"
-    docker run -d \
+    docker create \
       --network $NET_NAME \
-      -p2222:22 \
-      -p8080:80 \
-      --env-file .env \
-      -e WIFI_PHY=$PHY \
       --cap-add NET_ADMIN \
       --cap-add NET_RAW \
       --hostname openwrt\
       --name $CONTAINER openwrt >/dev/null
+
+    _gen_config
+    docker start $CONTAINER
   fi
 }
 
 function main {
-  test -z $IFACE && _usage
+  test -z $WIFI_IFACE && _usage
 
   _get_phy_from_dev
 
-  echo "* setting interface '$IFACE' to unmanaged"
-  nmcli dev set $IFACE managed no
+  echo "* setting interface '$WIFI_IFACE' to unmanaged"
+  nmcli dev set $WIFI_IFACE managed no
 
   _create_or_start_container
 
-  echo "* moving device $PHY to docker network namespace"
+  echo "* moving device $WIFI_PHY to docker network namespace"
   pid=$(docker inspect -f '{{.State.Pid}}' $CONTAINER)
-  sudo iw phy "$PHY" set netns $pid
-  docker exec $CONTAINER /etc/init.d/network restart
+  sudo iw phy "$WIFI_PHY" set netns $pid
 
   echo "* ready"
 }
