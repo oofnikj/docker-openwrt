@@ -1,2 +1,3 @@
 *.tar.gz
-etc/config/*.gen
+etc/config/*
+!etc/config/*.tpl
