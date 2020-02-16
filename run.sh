@@ -21,6 +21,8 @@ function _cleanup {
   echo -e "\n* cleaning up..."
   echo "* stopping container"
   docker stop openwrt_1 >/dev/null
+  echo "* deleting macvlan interface"
+  sudo ip link del macvlan0
   echo -ne "* finished"
 }
 
@@ -30,8 +32,8 @@ function _gen_config {
   source .env
   _get_phy_from_dev
   for file in etc/config/*.tpl; do
-    envsubst < ${file} > ${file%.tpl}.gen
-    docker cp ${file%.tpl}.gen $CONTAINER:/${file%.tpl}
+    envsubst < ${file} > ${file%.tpl}
+    docker cp ${file%.tpl} $CONTAINER:/${file%.tpl}
   done
   set +a
 }
@@ -39,15 +41,20 @@ function _gen_config {
 function _init_network {
   echo "* setting up docker network"
   docker network create --driver macvlan \
-    -o parent=$NET_PARENT \
-    --gateway $NET_GW \
-    --subnet $NET_SUBNET \
-      $NET_NAME 2>/dev/null
+    -o parent=$LAN_PARENT \
+    --subnet $LAN_SUBNET \
+    --aux-address host=$LAN_HOST \
+      $LAN_NAME
 
-  sudo ip link add macvlan0 link $NET_PARENT type macvlan mode bridge
-  sudo ip addr add $NET_HOST/24 dev macvlan0
+  docker network create --driver macvlan \
+    -o parent=$WAN_PARENT \
+    --subnet $WAN_SUBNET \
+      $WAN_NAME
+
+  sudo ip link add macvlan0 link $LAN_PARENT type macvlan mode bridge
+  sudo ip addr add $LAN_HOST/24 dev macvlan0
   sudo ip link set macvlan0 up
-  sudo ip route add $NET_ADDR/32 dev macvlan0
+  sudo ip route add $LAN_ADDR/32 dev macvlan0
 }
 
 function _create_or_start_container {
@@ -58,11 +65,12 @@ function _create_or_start_container {
   else
     echo "* creating container $CONTAINER"
     docker create \
-      --network $NET_NAME \
+      --network $LAN_NAME \
       --cap-add NET_ADMIN \
       --cap-add NET_RAW \
       --hostname openwrt\
       --name $CONTAINER openwrt >/dev/null
+    docker network connect $WAN_NAME $CONTAINER
 
     _gen_config
     docker start $CONTAINER
@@ -76,7 +84,7 @@ function main {
 
   echo "* setting interface '$WIFI_IFACE' to unmanaged"
   nmcli dev set $WIFI_IFACE managed no
-  
+
   _init_network
   _create_or_start_container
 

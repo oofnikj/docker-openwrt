@@ -8,6 +8,10 @@ config 'interface'    'lan'
     option 'type'     'bridge'
     option 'ifname'   'eth0'
     option 'proto'    'static'
-    option 'ipaddr'   "${NET_ADDR}"
-    option 'gateway'  "${NET_GW}"
-    option 'netmask'  "${NET_NETMASK}"
+    option 'ipaddr'   "${LAN_ADDR}"
+    option 'gateway'  "${LAN_GW}"
+    option 'netmask'  "${LAN_NETMASK}"
+
+config 'interface'    'wan'
+    option 'ifname'   'eth1'
+    option 'proto'    'dhcp'
