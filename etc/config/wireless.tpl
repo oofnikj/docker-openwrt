@@ -2,6 +2,7 @@ config 'wifi-device'    'radio0'
     option 'type'       'mac80211'
     option 'phy'        "${WIFI_PHY}"
     option 'hwmode'     "${WIFI_HW_MODE}"
+    option 'htmode'     "${WIFI_HT_MODE}"
     option 'channel'    "${WIFI_CHANNEL}"
 
 config 'wifi-iface'     "${WIFI_IFACE}"
