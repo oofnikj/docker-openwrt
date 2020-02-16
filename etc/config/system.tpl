@@ -5,7 +5,7 @@ config system
     option log_size       '8192'
     option cronloglevel   '5'
     option log_proto      'udp'
-    option log_file       '/var/log/syslog'
+    option log_file       '/proc/1/fd/1'
     option conloglevel    '8'
 
 config timeserver 'ntp'
