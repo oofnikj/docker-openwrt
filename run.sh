@@ -68,7 +68,7 @@ function _create_or_start_container {
       --network $LAN_NAME \
       --cap-add NET_ADMIN \
       --cap-add NET_RAW \
-      --hostname openwrt\
+      --hostname openwrt \
       --name $CONTAINER openwrt >/dev/null
     docker network connect $WAN_NAME $CONTAINER
 
