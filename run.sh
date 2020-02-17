@@ -40,18 +40,17 @@ function _gen_config {
 
 function _init_network {
   echo "* setting up docker network"
-  docker network create --driver macvlan \
-    -o parent=$LAN_PARENT \
+  LAN_ID=$(docker network create --driver macvlan \
     --subnet $LAN_SUBNET \
     --aux-address host=$LAN_HOST \
-      $LAN_NAME
+      $LAN_NAME)
 
-  docker network create --driver macvlan \
+  WAN_ID=$(docker network create --driver macvlan \
     -o parent=$WAN_PARENT \
     --subnet $WAN_SUBNET \
-      $WAN_NAME
+      $WAN_NAME)
 
-  sudo ip link add macvlan0 link $LAN_PARENT type macvlan mode bridge
+  sudo ip link add macvlan0 link "dm-${LAN_ID:0:12}" type macvlan mode bridge
   sudo ip addr add $LAN_HOST/24 dev macvlan0
   sudo ip link set macvlan0 up
   sudo ip route add $LAN_SUBNET dev macvlan0
