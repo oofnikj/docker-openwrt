@@ -63,6 +63,7 @@ function _create_or_start_container {
     echo "* starting container '$CONTAINER'"
     docker start $CONTAINER
   else
+    _init_network
     echo "* creating container $CONTAINER"
     docker create \
       --network $LAN_NAME \
@@ -85,7 +86,6 @@ function main {
   echo "* setting interface '$WIFI_IFACE' to unmanaged"
   nmcli dev set $WIFI_IFACE managed no
 
-  _init_network
   _create_or_start_container
 
   echo "* moving device $WIFI_PHY to docker network namespace"
