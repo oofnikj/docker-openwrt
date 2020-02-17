@@ -54,7 +54,7 @@ function _init_network {
   sudo ip link add macvlan0 link $LAN_PARENT type macvlan mode bridge
   sudo ip addr add $LAN_HOST/24 dev macvlan0
   sudo ip link set macvlan0 up
-  sudo ip route add $LAN_ADDR/32 dev macvlan0
+  sudo ip route add $LAN_SUBNET dev macvlan0
 }
 
 function _create_or_start_container {
