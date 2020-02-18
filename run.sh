@@ -7,8 +7,17 @@ function _usage {
   exit 1
 }
 
-function _get_phy_from_dev {
-  if [[ -f /sys/class/net/$WIFI_IFACE/phy80211/name ]] ; then
+function _nmcli() {
+  type nmcli >/dev/null 2>&1
+  if [[ $? -eq 0 ]]; then
+    echo "* setting interface '$WIFI_IFACE' to unmanaged"
+    nmcli dev set $WIFI_IFACE managed no
+    nmcli radio wifi on
+  fi
+}
+
+function _get_phy_from_dev() {
+  if [[ -f /sys/class/net/$WIFI_IFACE/phy80211/name ]]; then
     WIFI_PHY=$(cat /sys/class/net/$WIFI_IFACE/phy80211/name 2>/dev/null)
     echo "* got '$WIFI_PHY' for device '$WIFI_IFACE'"
   else
@@ -81,10 +90,7 @@ function main {
   test -z $WIFI_IFACE && _usage
 
   _get_phy_from_dev
-
-  echo "* setting interface '$WIFI_IFACE' to unmanaged"
-  nmcli dev set $WIFI_IFACE managed no
-
+  _nmcli
   _create_or_start_container
 
   echo "* moving device $WIFI_PHY to docker network namespace"
