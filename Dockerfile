@@ -1,5 +1,4 @@
 FROM scratch
-# ADD https://downloads.openwrt.org/releases/19.07.1/targets/x86/64/openwrt-19.07.1-x86-64-generic-rootfs.tar.gz \
 ADD openwrt-19.07.1-x86-64-generic-rootfs.tar.gz /
 RUN mkdir -p /var/lock
 RUN opkg remove dnsmasq && \
