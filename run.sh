@@ -32,6 +32,8 @@ function _cleanup {
   docker stop openwrt_1 >/dev/null
   echo "* deleting macvlan interface"
   sudo ip link del macvlan0
+  echo "* cleaning up netns symlink"
+  sudo rm -rf /var/run/netns/$CONTAINER
   echo -ne "* finished"
 }
 
@@ -96,6 +98,10 @@ function main {
   echo "* moving device $WIFI_PHY to docker network namespace"
   pid=$(docker inspect -f '{{.State.Pid}}' $CONTAINER)
   sudo iw phy "$WIFI_PHY" set netns $pid
+
+  echo "* creating netns symlink '$CONTAINER'"
+  sudo mkdir -p /var/run/netns
+  sudo ln -sf /proc/$pid/ns/net /var/run/netns/$CONTAINER
 
   echo "* ready"
 }
