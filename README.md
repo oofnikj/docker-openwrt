@@ -1,10 +1,10 @@
 # OpenWRT in Docker
 
-I wanted a GUI frontend to managing my home network, so here is an implementation of OpenWRT in Docker.
+Inspired by other projects that run `hostapd` in a Docker container. This goes one step further.
 
 ## Build
 ```
-$ docker build -t openwrt .
+$ make build
 ```
 
 ## Configure
@@ -12,5 +12,10 @@ See `.env`
 
 ## Run
 ```
-$ ./run.sh [WIFI_INTERFACE]
+$ make run
+```
+
+## Cleanup
+```
+$ make clean
 ```
