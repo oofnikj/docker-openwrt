@@ -2,7 +2,7 @@
 
 source .env
 
-function _usage {
+function _usage() {
   echo "$0 [interface_name]"
   exit 1
 }
@@ -26,7 +26,7 @@ function _get_phy_from_dev() {
   fi
 }
 
-function _cleanup {
+function _cleanup() {
   echo -e "\n* cleaning up..."
   echo "* stopping container"
   docker stop openwrt_1 >/dev/null
@@ -37,29 +37,29 @@ function _cleanup {
   echo -ne "* finished"
 }
 
-function _gen_config {
+function _gen_config() {
   echo "* generating network config"
   set -a
   source .env
   _get_phy_from_dev
   for file in etc/config/*.tpl; do
-    envsubst < ${file} > ${file%.tpl}
+    envsubst <${file} >${file%.tpl}
     docker cp ${file%.tpl} $CONTAINER:/${file%.tpl}
   done
   set +a
 }
 
-function _init_network {
+function _init_network() {
   echo "* setting up docker network"
   LAN_ID=$(docker network create --driver macvlan \
     --subnet $LAN_SUBNET \
     --aux-address host=$LAN_HOST \
-      $LAN_NAME)
+    $LAN_NAME)
 
   WAN_ID=$(docker network create --driver macvlan \
     -o parent=$WAN_PARENT \
     --subnet $WAN_SUBNET \
-      $WAN_NAME)
+    $WAN_NAME)
 
   sudo ip link add macvlan0 link "dm-${LAN_ID:0:12}" type macvlan mode bridge
   sudo ip addr add $LAN_HOST/24 dev macvlan0
@@ -67,7 +67,7 @@ function _init_network {
   sudo ip route add $LAN_SUBNET dev macvlan0
 }
 
-function _create_or_start_container {
+function _create_or_start_container() {
   docker inspect $CONTAINER >/dev/null 2>&1
   if [[ $? -eq 0 ]]; then
     echo "* starting container '$CONTAINER'"
@@ -88,7 +88,7 @@ function _create_or_start_container {
   fi
 }
 
-function main {
+function main() {
   test -z $WIFI_IFACE && _usage
 
   _get_phy_from_dev
