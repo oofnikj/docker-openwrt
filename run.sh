@@ -31,8 +31,6 @@ function _cleanup() {
   echo -e "\n* cleaning up..."
   echo "* stopping container"
   docker stop openwrt_1 >/dev/null
-  echo "* deleting macvlan interface"
-  sudo ip link del macvlan0
   echo "* cleaning up netns symlink"
   sudo rm -rf /var/run/netns/$CONTAINER
   echo -ne "* finished"
@@ -52,7 +50,7 @@ function _gen_config() {
 
 function _init_network() {
   echo "* setting up docker network"
-  LAN_ID=$(docker network create --driver macvlan \
+  LAN_ID=$(docker network create --driver bridge \
     --subnet $LAN_SUBNET \
     -o macvlan_mode=bridge \
     $LAN_NAME)
@@ -61,11 +59,6 @@ function _init_network() {
     -o parent=$WAN_PARENT \
     --subnet $WAN_SUBNET \
     $WAN_NAME)
-
-  sudo ip link add macvlan0 link "dm-${LAN_ID:0:12}" type macvlan mode bridge
-  sudo ip addr add $LAN_HOST/24 dev macvlan0
-  sudo ip link set macvlan0 up
-  sudo ip route add $LAN_SUBNET dev macvlan0
 }
 
 function _create_or_start_container() {
