@@ -99,6 +99,13 @@ function main() {
   sudo mkdir -p /var/run/netns
   sudo ln -sf /proc/$pid/ns/net /var/run/netns/$CONTAINER
 
+
+  echo "* set hairpin mode on wifi interface"
+  for _ in {1..10}; do
+    sudo ip netns exec $CONTAINER ip link set $WIFI_IFACE type bridge_slave hairpin on && break
+    sleep 1
+  done
+
   echo "* ready"
 }
 
