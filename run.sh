@@ -52,14 +52,14 @@ function _gen_config() {
 
 function _init_network() {
   echo "* setting up docker network"
-  LAN_ID=$(docker network create --driver bridge \
+  docker network create --driver bridge \
     --subnet $LAN_SUBNET \
-    $LAN_NAME)
+    $LAN_NAME
 
-  WAN_ID=$(docker network create --driver macvlan \
+  docker network create --driver macvlan \
     -o parent=$WAN_PARENT \
     --subnet $WAN_SUBNET \
-    $WAN_NAME)
+    $WAN_NAME
 }
 
 function _create_or_start_container() {
@@ -101,12 +101,15 @@ function main() {
   sudo ln -sf /proc/$pid/ns/net /var/run/netns/$CONTAINER
 
 
-  echo "* set hairpin mode on wifi interface"
+  echo -n "* set hairpin mode on wifi interface"
   for _ in {1..10}; do
-    sudo ip netns exec $CONTAINER ip link set $WIFI_IFACE type bridge_slave hairpin on && break
+    echo -n '.'
+    sudo ip netns exec $CONTAINER ip link set $WIFI_IFACE type bridge_slave hairpin on 2>/dev/null && break
     sleep 1
   done
-
+  echo "ok"
+  
+  LAN_ID=$(docker network inspect $LAN_NAME -f "{{.Id}}")
   echo "* getting address via DHCP"
   sudo dhcpcd -q --noarp "br-${LAN_ID:0:12}"
   
