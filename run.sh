@@ -75,6 +75,7 @@ function _set_hairpin() {
 }
 
 function _create_or_start_container() {
+  docker inspect $BUILD_TAG >/dev/null 2>&1 || { echo "no image '$BUILD_TAG' found, did you forget to run 'make build'?"; exit 1; }
   docker inspect $CONTAINER >/dev/null 2>&1
   if [[ $? -eq 0 ]]; then
     echo "* starting container '$CONTAINER'"
@@ -89,7 +90,7 @@ function _create_or_start_container() {
       --hostname openwrt \
       --ip $LAN_ADDR \
       --sysctl net.ipv4.conf.default.arp_ignore=1 \
-      --name $CONTAINER openwrt >/dev/null
+      --name $CONTAINER $BUILD_TAG >/dev/null
     docker network connect $WAN_NAME $CONTAINER
 
     _gen_config
