@@ -33,6 +33,8 @@ function _cleanup() {
   docker stop openwrt_1 >/dev/null
   echo "* cleaning up netns symlink"
   sudo rm -rf /var/run/netns/$CONTAINER
+  echo "* removing DHCP lease"
+  sudo dhcpcd -q -k "br-${LAN_ID:0:12}"
   echo -ne "* finished"
 }
 
@@ -52,7 +54,6 @@ function _init_network() {
   echo "* setting up docker network"
   LAN_ID=$(docker network create --driver bridge \
     --subnet $LAN_SUBNET \
-    -o macvlan_mode=bridge \
     $LAN_NAME)
 
   WAN_ID=$(docker network create --driver macvlan \
@@ -106,6 +107,9 @@ function main() {
     sleep 1
   done
 
+  echo "* getting address via DHCP"
+  sudo dhcpcd -q --noarp "br-${LAN_ID:0:12}"
+  
   echo "* ready"
 }
 
