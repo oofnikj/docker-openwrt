@@ -7,6 +7,7 @@ RUN opkg remove dnsmasq && \
       wpa-supplicant \
       hostapd \
       iw-full \
+      ip-full \
       kmod-mac80211 \
       iperf3 \
       dnsmasq-full \
