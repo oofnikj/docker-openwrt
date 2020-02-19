@@ -62,6 +62,18 @@ function _init_network() {
     $WAN_NAME
 }
 
+function _set_hairpin() {
+  echo -n "* set hairpin mode on interface '$1'"
+  for i in {1..10}; do
+    echo -n '.'
+    sudo ip netns exec $CONTAINER ip link set $WIFI_IFACE type bridge_slave hairpin on 2>/dev/null && { echo 'ok'; break; }
+    sleep 1
+  done
+  if [[ $i -ge 10 ]]; then
+    echo -e "\ncouldn't set hairpin mode, wifi clients will probably be unable to talk to each other"
+  fi
+}
+
 function _create_or_start_container() {
   docker inspect $CONTAINER >/dev/null 2>&1
   if [[ $? -eq 0 ]]; then
@@ -100,15 +112,8 @@ function main() {
   sudo mkdir -p /var/run/netns
   sudo ln -sf /proc/$pid/ns/net /var/run/netns/$CONTAINER
 
+  _set_hairpin $WIFI_IFACE
 
-  echo -n "* set hairpin mode on wifi interface"
-  for _ in {1..10}; do
-    echo -n '.'
-    sudo ip netns exec $CONTAINER ip link set $WIFI_IFACE type bridge_slave hairpin on 2>/dev/null && break
-    sleep 1
-  done
-  echo "ok"
-  
   LAN_ID=$(docker network inspect $LAN_NAME -f "{{.Id}}")
   echo "* getting address via DHCP"
   sudo dhcpcd -q --noarp "br-${LAN_ID:0:12}"
