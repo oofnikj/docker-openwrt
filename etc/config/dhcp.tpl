@@ -1,8 +1,8 @@
 config dnsmasq
         option domainneeded '1'
         option localise_queries '1'
-        option local '/lan/'
-        option domain 'lan'
+        option local '/home/'
+        option domain 'home'
         option expandhosts '1'
         option authoritative '1'
         option readethers '1'
