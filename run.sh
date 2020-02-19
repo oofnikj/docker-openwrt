@@ -1,4 +1,5 @@
 #!/bin/bash
+# set -x 
 
 source .env
 
@@ -53,7 +54,7 @@ function _init_network() {
   echo "* setting up docker network"
   LAN_ID=$(docker network create --driver macvlan \
     --subnet $LAN_SUBNET \
-    --aux-address host=$LAN_HOST \
+    -o macvlan_mode=bridge \
     $LAN_NAME)
 
   WAN_ID=$(docker network create --driver macvlan \
@@ -80,6 +81,8 @@ function _create_or_start_container() {
       --cap-add NET_ADMIN \
       --cap-add NET_RAW \
       --hostname openwrt \
+      --ip $LAN_ADDR \
+      --sysctl net.ipv4.conf.default.arp_ignore=1 \
       --name $CONTAINER openwrt >/dev/null
     docker network connect $WAN_NAME $CONTAINER
 
