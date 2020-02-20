@@ -1,3 +1,4 @@
+openwrt.conf
 *.tar.gz
 etc/config/*
 !etc/config/*.tpl
