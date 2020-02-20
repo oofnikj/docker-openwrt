@@ -5,7 +5,7 @@ include openwrt.conf
 build:
 		test -f openwrt-19.07.1-x86-64-generic-rootfs.tar.gz || \
 			wget -q https://downloads.openwrt.org/releases/19.07.1/targets/x86/64/openwrt-19.07.1-x86-64-generic-rootfs.tar.gz
-		docker build -t ${BUILD_TAG} .
+		@docker build --no-cache --build-arg ROOT_PW=${ROOT_PW} -t ${BUILD_TAG} .
 
 run:
 		./run.sh

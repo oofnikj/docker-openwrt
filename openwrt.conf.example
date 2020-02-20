@@ -3,6 +3,7 @@
 # general
 BUILD_TAG=openwrt
 CONTAINER=openwrt_1
+ROOT_PW=changeme123
 
 # docker network settings
 # wan

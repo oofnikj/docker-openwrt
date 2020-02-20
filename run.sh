@@ -41,7 +41,7 @@ function _cleanup() {
 function _gen_config() {
   echo "* generating network config"
   set -a
-  source .env
+  source openwrt.conf
   _get_phy_from_dev
   for file in etc/config/*.tpl; do
     envsubst <${file} >${file%.tpl}
