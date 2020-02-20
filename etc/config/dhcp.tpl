@@ -8,7 +8,8 @@ config dnsmasq
         option readethers '1'
         option leasefile '/tmp/dhcp.leases'
         option localservice '1'
-        option rebind_protection '0'
+        option rebind_protection '1'
+        option rebind_domain "${LAN_DOMAIN}"
         list server "${UPSTREAM_DNS_SERVER}"
 
 config dhcp 'lan'
