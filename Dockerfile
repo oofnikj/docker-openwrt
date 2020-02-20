@@ -10,8 +10,6 @@ RUN opkg remove dnsmasq && \
       ip-full \
       kmod-mac80211 \
       iperf3 \
-      dnsmasq-full \
-      tcpdump
-COPY etc/config/network.tpl /etc/config/network
-COPY etc/config/wireless.tpl /etc/config/wireless
+      dnsmasq-full
+
 CMD [ "/sbin/init" ]
