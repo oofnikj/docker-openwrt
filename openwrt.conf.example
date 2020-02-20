@@ -1,3 +1,5 @@
+### Sample OpenWRT config file ###
+
 # general
 BUILD_TAG=openwrt
 CONTAINER=openwrt_1
