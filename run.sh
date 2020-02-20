@@ -1,7 +1,7 @@
 #!/bin/bash
 # set -x 
 
-source .env
+source openwrt.conf
 
 function _usage() {
   echo "$0 [interface_name]"

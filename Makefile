@@ -1,6 +1,6 @@
 .PHONY: build run clean
 
-include .env
+include openwrt.conf
 
 build:
 		test -f openwrt-19.07.1-x86-64-generic-rootfs.tar.gz || \
