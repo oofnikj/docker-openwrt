@@ -1,7 +1,7 @@
 #!/bin/bash
 # set -x 
 
-source openwrt.conf
+source openwrt.conf || { echo 'no config file found! use openwrt.conf.example for inspiration'; exit 1; }
 
 function _usage() {
   echo "$0 [interface_name]"
