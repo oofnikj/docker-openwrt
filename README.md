@@ -23,7 +23,7 @@ A searchable package list is available on [openwrt.org](https://openwrt.org/pack
 
 ## Configure
 
-Configuration is performed using a config file, `.env`. Values read from this file at runtime are used to generate OpenWRT format config files.
+Configuration is performed using a config file, `openwrt.conf`. Values read from this file at runtime are used to generate OpenWRT format config files.
 
 To add or change a configuration, modify the config templates in `etc/config/<section>.tpl`.
 

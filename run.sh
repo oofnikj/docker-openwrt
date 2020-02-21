@@ -1,12 +1,15 @@
 #!/bin/bash
 # set -x 
 
-source openwrt.conf || { echo 'no config file found! use openwrt.conf.example for inspiration'; exit 1; }
 
 function _usage() {
-  echo "$0 [interface_name]"
+  echo "Could not find config file."
+  echo "Usage: $0 [/path/to/openwrt.conf]"
   exit 1
 }
+
+CONFIG_FILE=${1:-"openwrt.conf"}
+source $CONFIG_FILE 2>/dev/null || { _usage; exit 1; }
 
 function _nmcli() {
   type nmcli >/dev/null 2>&1
