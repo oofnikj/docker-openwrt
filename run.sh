@@ -1,14 +1,14 @@
 #!/bin/bash
 # set -x 
 
-
 function _usage() {
   echo "Could not find config file."
   echo "Usage: $0 [/path/to/openwrt.conf]"
   exit 1
 }
-
-CONFIG_FILE=${1:-"openwrt.conf"}
+SCRIPT_DIR=$(cd $(dirname $0) && pwd )
+DEFAULT_CONFIG_FILE=$SCRIPT_DIR/openwrt.conf
+CONFIG_FILE=${1:-$DEFAULT_CONFIG_FILE}
 source $CONFIG_FILE 2>/dev/null || { _usage; exit 1; }
 
 function _nmcli() {
@@ -44,7 +44,7 @@ function _cleanup() {
 function _gen_config() {
   echo "* generating network config"
   set -a
-  source openwrt.conf
+  source $CONFIG_FILE
   _get_phy_from_dev
   for file in etc/config/*.tpl; do
     envsubst <${file} >${file%.tpl}
@@ -103,7 +103,7 @@ function _create_or_start_container() {
 
 function main() {
   test -z $WIFI_IFACE && _usage
-
+  cd $SCRIPT_DIR
   _get_phy_from_dev
   _nmcli
   _create_or_start_container
