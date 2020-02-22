@@ -32,7 +32,7 @@ To add or change a configuration, modify the config templates in `etc/config/<se
 $ make run
 ```
 
-If you're lucky, browse to http://openwrt.home (or whatever you set in `LAN_DOMAIN`) and you should be presented with the login page. The default login is `root` with the password set as ${ROOT_PW}.
+If you're lucky, browse to http://openwrt.home (or whatever you set in `LAN_DOMAIN`) and you should be presented with the login page. The default login is `root` with the password set as `ROOT_PW`.
 
 To shut down the router, press `Ctrl+C`. Any settings you configured or additional packages you installed will persist until you run `make clean`, which will delete the container.
 
