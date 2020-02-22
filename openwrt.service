@@ -1,0 +1,9 @@
+[Unit]
+Description="OpenWRT"
+
+[Service]
+Type=simple
+ExecStart=
+
+[Install]
+WantedBy=network-online.target
