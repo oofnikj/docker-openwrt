@@ -3,15 +3,14 @@
 include openwrt.conf
 
 build:
-		@docker build --build-arg ROOT_PW=${ROOT_PW} -t ${BUILD_TAG} .
+	@docker build --build-arg ROOT_PW=${ROOT_PW} -t ${BUILD_TAG} .
 
 run:
-		./run.sh
+	./run.sh
 
 clean:
-		docker rm ${CONTAINER} || true
-		docker network rm ${LAN_NAME} ${WAN_NAME} || true
-		docker rmi ${BUILD_TAG}
+	docker rm ${CONTAINER} || true
+	docker network rm ${LAN_NAME} ${WAN_NAME} || true
 
 install:
 	install -Dm644 openwrt.service /usr/lib/systemd/system/openwrt.service
