@@ -13,3 +13,4 @@ config 'wifi-iface'     "${WIFI_IFACE}"
     option 'ssid'       "${WIFI_SSID}"
     option 'encryption' "${WIFI_ENCRYPTION}"
     option 'key'        "${WIFI_KEY}"
+    option 'disassoc_low_ack' '0'
