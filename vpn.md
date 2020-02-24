@@ -2,7 +2,7 @@
 
 Here is a short guide on how to set up a VPN server on OpenWRT.
 
-1. Need to create `/dev/net/tun` inside the container on boot:
+* Need to create `/dev/net/tun` inside the container on boot:
 ```
 # sed -i '$i\
 mkdir -p /dev/net\
@@ -13,7 +13,7 @@ mknod /dev/net/tun c 10 200' /etc/rc.local
 ## Add firewall rules
 We will be using `169.254.11.0/29` as our VPN subnet.
 
-1. Allow port 1194 UDP from WAN:
+* Allow port 1194 UDP from WAN:
 
 ```
 # cat <<EOF | uci batch
@@ -34,7 +34,7 @@ EOF
 # /etc/init.d/firewall restart
 ```
 
-1. Add NAT rule to masquerade VPN traffic:
+* Add NAT rule to masquerade VPN traffic:
 ```
 # cat <<EOF | uci batch
 set firewall.ovpn_nat=nat
@@ -48,43 +48,43 @@ EOF
 ```
 
 ## Generate certificates
-1. Install packages
+* Install packages
 ```
 # opkg update
 # opkg install openvpn-openssl openvpn-easy-rsa luci-app-openvpn
 ```
 
-1. Set configuration params
+* Set configuration params
 ``` 
 # export EASYRSA_PKI=/etc/easy-rsa/pki
 # export EASYRSA_REQ_CN=<my-vpn.example.com>
 ```
 
-1. Generate pre-shared key
+* Generate pre-shared key
 ```
 # openvpn --genkey --secret ${EASYRSA_PKI}/tls.pem
 ```
  
-1. (Re-)initialize the PKI directory
+* (Re-)initialize the PKI directory
 ```
 # easyrsa --batch init-pki
 ```
 
-1. Generate DH parameters
+* Generate DH parameters
 ```
 # easyrsa --batch gen-dh
 ```
 
-1. Create a new CA
+* Create a new CA
 ```
 # easyrsa --batch build-ca nopass
 ```
-1. Generate a keypair and sign locally for a server
+* Generate a keypair and sign locally for a server
 ```
 # easyrsa --batch build-server-full server nopass
 ```
 
-1. Generate a keypair and sign locally for a client
+* Generate a keypair and sign locally for a client
 ```
 # easyrsa --batch build-client-full client nopass
 ```
@@ -117,7 +117,7 @@ EOF
 # /etc/init.d/openvpn restart
 ```
 
-1. Generate inline client config
+* Generate inline client config
 ```
 # cat <<EOF > client.ovpn
 client
@@ -150,7 +150,7 @@ $(cat $EASYRSA_PKI/private/client.key)
 EOF
 ```
 
-1. Copy `client.ovpn` to your client and try to connect.
+Copy `client.ovpn` to your client and try to connect.
 
 ---
 ## Reference
