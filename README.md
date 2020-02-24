@@ -23,24 +23,36 @@ A searchable package list is available on [openwrt.org](https://openwrt.org/pack
 
 ## Configure
 
-Configuration is performed using a config file, `openwrt.conf`. Values read from this file at runtime are used to generate OpenWRT format config files.
+Initial configuration is performed using a config file, `openwrt.conf`. Values read from this file at runtime are used to generate OpenWRT format config files.
 
-To add or change a configuration, modify the config templates in `etc/config/<section>.tpl`.
+To add or change the base configuration, modify the config templates in `etc/config/<section>.tpl`.
+
+You can of course make persistent changes in the UI and download a backup of your full router configuration by navigating to System > Backup / Flash Firmware and clicking Backup.
 
 ## Run
 ```
 $ make run
 ```
 
-If you're lucky, browse to http://openwrt.home (or whatever you set in `LAN_DOMAIN`) and you should be presented with the login page. The default login is `root` with the password set as `ROOT_PW`.
+If you arrive at `* Ready`, point your browser to http://openwrt.home (or whatever you set in `LAN_DOMAIN`) and you should be presented with the login page. The default login is `root` with the password set as `ROOT_PW`.
 
 To shut down the router, press `Ctrl+C`. Any settings you configured or additional packages you installed will persist until you run `make clean`, which will delete the container.
+
+## Install / Uninstall
+```
+$ make install
+```
+Install and uninstall targets for `systemd` have been included in the Makefile.
+
+Installing will create and enable a service pointing to wherever you cloned this directory and execute `run.sh` on boot.
 
 ## Cleanup
 ```
 $ make clean
 ```
 This will delete the container and all associated Docker networks so you can start fresh if you screw something up.
+
+---
 
 ## Notes
 
