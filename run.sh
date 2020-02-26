@@ -93,6 +93,7 @@ function _create_or_start_container() {
       --hostname openwrt \
       --ip $LAN_ADDR \
       --sysctl net.ipv4.conf.default.arp_ignore=1 \
+      --sysctl net.netfilter.nf_conntrack_acct=1 \
       --name $CONTAINER $BUILD_TAG >/dev/null
     docker network connect $WAN_NAME $CONTAINER
 
