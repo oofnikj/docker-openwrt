@@ -1,3 +1,6 @@
+config globals globals
+    option 'ula_prefix' "${LAN6_SUBNET}"
+
 config 'interface'    'loopback'
     option 'ifname'   'lo'
     option 'proto'    'static'
@@ -11,7 +14,12 @@ config 'interface'    'lan'
     option 'ipaddr'   "${LAN_ADDR}"
     option 'gateway'  "${LAN_GW}"
     option 'netmask'  "${LAN_NETMASK}"
+    option 'ip6assign' 64
 
 config 'interface'    'wan'
     option 'ifname'   'eth1'
     option 'proto'    'dhcp'
+
+config 'interface'    'wan6'
+    option 'ifname'   'eth1'
+    option 'proto'    'dhcpv6'

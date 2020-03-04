@@ -92,8 +92,9 @@ function _create_or_start_container() {
       --cap-add NET_RAW \
       --hostname openwrt \
       --ip $LAN_ADDR \
-      --sysctl net.ipv4.conf.default.arp_ignore=1 \
       --sysctl net.netfilter.nf_conntrack_acct=1 \
+      --sysctl net.ipv6.conf.all.disable_ipv6=0 \
+      --sysctl net.ipv6.conf.all.forwarding=1 \
       --name $CONTAINER $BUILD_TAG >/dev/null
     docker network connect $WAN_NAME $CONTAINER
 
