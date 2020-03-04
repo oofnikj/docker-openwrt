@@ -85,3 +85,5 @@ $ sudo ip netns exec ${CONTAINER} tcpdump -vvi any
 ## [OpenVPN Howto](./vpn.md)
 
 ## [Bandwidth Monitoring Howto](./monitoring.md)
+
+## [IPv6 Notes](./ipv6.md)
