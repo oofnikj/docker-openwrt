@@ -57,12 +57,12 @@ function _init_network() {
   echo "* setting up docker network"
   docker network create --driver bridge \
     --subnet $LAN_SUBNET \
-    $LAN_NAME
+    $LAN_NAME || exit 1
 
   docker network create --driver macvlan \
     -o parent=$WAN_PARENT \
     --subnet $WAN_SUBNET \
-    $WAN_NAME
+    $WAN_NAME || exit 1
 }
 
 function _set_hairpin() {
