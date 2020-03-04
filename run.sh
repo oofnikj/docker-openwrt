@@ -121,7 +121,7 @@ function main() {
 
   LAN_ID=$(docker network inspect $LAN_NAME -f "{{.Id}}")
   echo "* getting address via DHCP"
-  sudo dhcpcd -q --noarp "br-${LAN_ID:0:12}"
+  sudo dhcpcd -q "br-${LAN_ID:0:12}"
   
   echo "* ready"
 }
