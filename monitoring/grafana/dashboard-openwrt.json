@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": 3484,
   "graphTooltip": 1,
-  "iteration": 1583502580722,
+  "iteration": 1583506084680,
   "links": [],
   "panels": [
     {
@@ -34,8 +34,8 @@
       "pluginVersion": "6.6.2",
       "showHeader": true,
       "sort": {
-        "col": 2,
-        "desc": true
+        "col": 1,
+        "desc": false
       },
       "styles": [
         {
@@ -154,8 +154,8 @@
       "pluginVersion": "6.6.2",
       "showHeader": true,
       "sort": {
-        "col": 2,
-        "desc": true
+        "col": 1,
+        "desc": false
       },
       "styles": [
         {
