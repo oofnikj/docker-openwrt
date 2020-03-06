@@ -1,4 +1,5 @@
 openwrt.conf
+.env
 *.tar.gz
 etc/config/*
 !etc/config/*.tpl
