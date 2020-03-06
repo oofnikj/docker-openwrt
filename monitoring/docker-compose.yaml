@@ -1,0 +1,33 @@
+version: "3"
+services:
+  grafana:
+    image: grafana/grafana:6.6.2
+    networks:
+      - openwrt-lan
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - "./grafana/provisioning:/etc/grafana/provisioning"
+      - "./grafana/dashboard-openwrt.json:/var/lib/grafana/dashboards/dashboard-openwrt.json"
+
+  influxdb:
+    image: influxdb:1.7
+    networks:
+      - openwrt-lan
+    ports:
+      - "8086:8086"
+      - "25826:25826/udp"
+    env_file: 
+      - .env
+    volumes:
+      - "./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf"
+      - "./influxdb/types.db:/usr/share/collectd/types.db"
+      - "influxdb:/var/lib/influxdb"
+
+networks:
+  openwrt-lan:
+
+volumes:
+  influxdb:
