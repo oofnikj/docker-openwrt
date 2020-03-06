@@ -28,6 +28,7 @@ services:
 
 networks:
   openwrt-lan:
+    external: true
 
 volumes:
   influxdb:
