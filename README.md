@@ -86,4 +86,6 @@ $ sudo ip netns exec ${CONTAINER} tcpdump -vvi any
 
 ## [Bandwidth Monitoring Howto](./monitoring.md)
 
+## [Monitoring with InfluxDB + Grafana](./monitoring/README.md)
+
 ## [IPv6 Notes](./ipv6.md)
