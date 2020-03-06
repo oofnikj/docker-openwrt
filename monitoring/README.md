@@ -1,5 +1,8 @@
 # Monitoring with InfluxDB + Grafana
 
+![[11858]](https://grafana.com/api/dashboards/11858/images/7666/image)
+https://grafana.com/grafana/dashboards/11858
+
 A `docker-compose` script for ingesting `collectd` output from OpenWRT to InfluxDB, and using Grafana to build pretty dashboards.
 
 It's networked, so it doesn't need to be run on the same machine as OpenWRT, but it probably should.
