@@ -1,0 +1,13 @@
+apiVersion: 1
+datasources:
+- name: InfluxDB
+  type: influxdb
+  access: proxy
+  url: "http://influxdb:8086"
+  database: collectd
+  user: ${INFLUXDB_READ_USER}
+  isDefault: true
+  jsonData:
+    httpMode: "GET"
+  secureJsonData:
+    password: ${INFLUXDB_READ_PASSWORD}
