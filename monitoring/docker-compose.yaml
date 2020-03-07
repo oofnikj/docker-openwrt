@@ -11,6 +11,7 @@ services:
     volumes:
       - "./grafana/provisioning:/etc/grafana/provisioning"
       - "./grafana/dashboard-openwrt.json:/var/lib/grafana/dashboards/dashboard-openwrt.json"
+    restart: always
 
   influxdb:
     image: influxdb:1.7
@@ -22,6 +23,7 @@ services:
       - "./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf"
       - "./influxdb/types.db:/usr/share/collectd/types.db"
       - "influxdb:/var/lib/influxdb"
+    restart: always
 
 networks:
   openwrt-lan:
