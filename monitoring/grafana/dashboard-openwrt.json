@@ -15,249 +15,9 @@
   "editable": true,
   "gnetId": 3484,
   "graphTooltip": 1,
-  "iteration": 1583602866506,
+  "iteration": 1584047438999,
   "links": [],
   "panels": [
-    {
-      "columns": [],
-      "datasource": "InfluxDB",
-      "fontSize": "100%",
-      "gridPos": {
-        "h": 8,
-        "w": 3,
-        "x": 0,
-        "y": 0
-      },
-      "id": 12,
-      "options": {},
-      "pageSize": null,
-      "pluginVersion": "6.6.2",
-      "showHeader": true,
-      "sort": {
-        "col": 1,
-        "desc": false
-      },
-      "styles": [
-        {
-          "alias": "Time",
-          "align": "auto",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "link": false,
-          "pattern": "Time",
-          "type": "hidden"
-        },
-        {
-          "alias": "Bytes",
-          "align": "right",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "decimals": 2,
-          "pattern": "/max_min/",
-          "thresholds": [],
-          "type": "number",
-          "unit": "bytes"
-        },
-        {
-          "alias": "Interface",
-          "align": "auto",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "mappingType": 1,
-          "pattern": "/instance/",
-          "thresholds": [],
-          "type": "string",
-          "unit": "short"
-        }
-      ],
-      "targets": [
-        {
-          "groupBy": [
-            {
-              "params": [
-                "($__to-$__from)s"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "instance"
-              ],
-              "type": "tag"
-            }
-          ],
-          "hide": false,
-          "measurement": "interface_rx",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT max(value)-min(value) FROM interface_tx WHERE type='if_octets' AND $timeFilter GROUP BY instance",
-          "rawQuery": true,
-          "refId": "A",
-          "resultFormat": "table",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "difference"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "instance",
-              "operator": "=~",
-              "value": "/^$interface$/"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "if_octets"
-            }
-          ]
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "TX Total",
-      "transform": "table",
-      "type": "table"
-    },
-    {
-      "columns": [],
-      "datasource": "InfluxDB",
-      "fontSize": "100%",
-      "gridPos": {
-        "h": 8,
-        "w": 3,
-        "x": 3,
-        "y": 0
-      },
-      "id": 14,
-      "options": {},
-      "pageSize": null,
-      "pluginVersion": "6.6.2",
-      "showHeader": true,
-      "sort": {
-        "col": 1,
-        "desc": false
-      },
-      "styles": [
-        {
-          "alias": "Time",
-          "align": "auto",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "link": false,
-          "pattern": "Time",
-          "type": "hidden"
-        },
-        {
-          "alias": "Bytes",
-          "align": "right",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "decimals": 2,
-          "pattern": "/max_min/",
-          "thresholds": [],
-          "type": "number",
-          "unit": "bytes"
-        },
-        {
-          "alias": "Interface",
-          "align": "auto",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "mappingType": 1,
-          "pattern": "/instance/",
-          "thresholds": [],
-          "type": "string",
-          "unit": "short"
-        }
-      ],
-      "targets": [
-        {
-          "groupBy": [
-            {
-              "params": [
-                "($__to-$__from)s"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "instance"
-              ],
-              "type": "tag"
-            }
-          ],
-          "hide": false,
-          "measurement": "interface_rx",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT max(value)-min(value) FROM interface_rx WHERE type='if_octets' AND $timeFilter GROUP BY instance",
-          "rawQuery": true,
-          "refId": "A",
-          "resultFormat": "table",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "difference"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "instance",
-              "operator": "=~",
-              "value": "/^$interface$/"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "if_octets"
-            }
-          ]
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "RX Total",
-      "transform": "table",
-      "type": "table"
-    },
     {
       "aliasColors": {},
       "bars": false,
@@ -268,9 +28,9 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 8,
-        "x": 6,
+        "x": 0,
         "y": 0
       },
       "hiddenSeries": false,
@@ -412,13 +172,230 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "InfluxDB",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 3,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "connected",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "1m",
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "host"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "load_shortterm",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "5m",
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "host"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "load_midterm",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "15m",
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "host"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "load_longterm",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Load average",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "InfluxDB",
       "decimals": 1,
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 8,
-        "w": 10,
-        "x": 14,
+        "h": 9,
+        "w": 8,
+        "x": 16,
         "y": 0
       },
       "hiddenSeries": false,
@@ -429,8 +406,10 @@
         "current": true,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
+        "sort": null,
+        "sortDesc": null,
         "total": false,
         "values": true
       },
@@ -555,9 +534,9 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 14,
+        "w": 18,
         "x": 0,
-        "y": 8
+        "y": 9
       },
       "hiddenSeries": false,
       "id": 6,
@@ -786,76 +765,90 @@
       }
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
+      "columns": [],
       "datasource": "InfluxDB",
-      "fill": 1,
-      "fillGradient": 0,
+      "fontSize": "100%",
       "gridPos": {
         "h": 9,
-        "w": 10,
-        "x": 14,
-        "y": 8
+        "w": 3,
+        "x": 18,
+        "y": 9
       },
-      "hiddenSeries": false,
-      "id": 3,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
+      "id": 12,
+      "options": {},
+      "pageSize": null,
+      "pluginVersion": "6.6.2",
+      "showHeader": true,
+      "sort": {
+        "col": 1,
+        "desc": false
       },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "connected",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      "styles": [
+        {
+          "alias": "Time",
+          "align": "auto",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "link": false,
+          "pattern": "Time",
+          "type": "hidden"
+        },
+        {
+          "alias": "Bytes",
+          "align": "right",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/max_min/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "bytes"
+        },
+        {
+          "alias": "Interface",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "/instance/",
+          "thresholds": [],
+          "type": "string",
+          "unit": "short"
+        }
+      ],
       "targets": [
         {
-          "alias": "1m",
-          "dsType": "influxdb",
           "groupBy": [
             {
               "params": [
-                "$__interval"
+                "($__to-$__from)s"
               ],
               "type": "time"
             },
             {
               "params": [
-                "host"
+                "instance"
               ],
               "type": "tag"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
             }
           ],
-          "measurement": "load_shortterm",
+          "hide": false,
+          "measurement": "interface_rx",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT max(value)-min(value) FROM interface_tx WHERE type='if_octets' AND $timeFilter GROUP BY instance",
+          "rawQuery": true,
           "refId": "A",
-          "resultFormat": "time_series",
+          "resultFormat": "table",
           "select": [
             [
               {
@@ -866,147 +859,150 @@
               },
               {
                 "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "5m",
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "host"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "load_midterm",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "15m",
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "host"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "load_longterm",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
+                "type": "difference"
               }
             ]
           ],
           "tags": [
             {
-              "key": "host",
+              "key": "instance",
               "operator": "=~",
-              "value": "/^$host$/"
+              "value": "/^$interface$/"
+            },
+            {
+              "condition": "AND",
+              "key": "type",
+              "operator": "=",
+              "value": "if_octets"
             }
           ]
         }
       ],
-      "thresholds": [],
       "timeFrom": null,
-      "timeRegions": [],
       "timeShift": null,
-      "title": "Load average",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
+      "title": "TX Total",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": "InfluxDB",
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 9,
+        "w": 3,
+        "x": 21,
+        "y": 9
       },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
+      "id": 14,
+      "options": {},
+      "pageSize": null,
+      "pluginVersion": "6.6.2",
+      "showHeader": true,
+      "sort": {
+        "col": 1,
+        "desc": false
       },
-      "yaxes": [
+      "styles": [
         {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
+          "alias": "Time",
+          "align": "auto",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "link": false,
+          "pattern": "Time",
+          "type": "hidden"
         },
         {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
+          "alias": "Bytes",
+          "align": "right",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/max_min/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "bytes"
+        },
+        {
+          "alias": "Interface",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "/instance/",
+          "thresholds": [],
+          "type": "string",
+          "unit": "short"
         }
       ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "($__to-$__from)s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "instance"
+              ],
+              "type": "tag"
+            }
+          ],
+          "hide": false,
+          "measurement": "interface_rx",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT max(value)-min(value) FROM interface_rx WHERE type='if_octets' AND $timeFilter GROUP BY instance",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "difference"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "instance",
+              "operator": "=~",
+              "value": "/^$interface$/"
+            },
+            {
+              "condition": "AND",
+              "key": "type",
+              "operator": "=",
+              "value": "if_octets"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "RX Total",
+      "transform": "table",
+      "type": "table"
     },
     {
       "aliasColors": {},
@@ -1021,7 +1017,7 @@
         "h": 9,
         "w": 19,
         "x": 0,
-        "y": 17
+        "y": 18
       },
       "hiddenSeries": false,
       "id": 22,
@@ -1167,7 +1163,7 @@
         "h": 9,
         "w": 5,
         "x": 19,
-        "y": 17
+        "y": 18
       },
       "id": 25,
       "options": {},
@@ -1296,7 +1292,7 @@
         "h": 9,
         "w": 19,
         "x": 0,
-        "y": 26
+        "y": 27
       },
       "hiddenSeries": false,
       "id": 23,
@@ -1443,7 +1439,7 @@
         "h": 9,
         "w": 5,
         "x": 19,
-        "y": 26
+        "y": 27
       },
       "id": 26,
       "options": {},
@@ -1571,7 +1567,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 35
+        "y": 36
       },
       "hiddenSeries": false,
       "id": 2,
@@ -1723,7 +1719,7 @@
         "h": 4,
         "w": 2,
         "x": 12,
-        "y": 35
+        "y": 36
       },
       "id": 16,
       "options": {
@@ -1813,7 +1809,7 @@
         "h": 9,
         "w": 10,
         "x": 14,
-        "y": 35
+        "y": 36
       },
       "hiddenSeries": false,
       "id": 8,
@@ -1944,7 +1940,7 @@
         "h": 5,
         "w": 2,
         "x": 12,
-        "y": 39
+        "y": 40
       },
       "id": 18,
       "options": {
@@ -2089,7 +2085,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
