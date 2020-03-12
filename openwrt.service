@@ -1,5 +1,6 @@
 [Unit]
 Description="OpenWRT"
+After=network.target
 
 [Service]
 Type=simple
