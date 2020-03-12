@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": 3484,
   "graphTooltip": 1,
-  "iteration": 1583506084680,
+  "iteration": 1583602866506,
   "links": [],
   "panels": [
     {
@@ -59,7 +59,7 @@
           "pattern": "/max_min/",
           "thresholds": [],
           "type": "number",
-          "unit": "decbytes"
+          "unit": "bytes"
         },
         {
           "alias": "Interface",
@@ -179,7 +179,7 @@
           "pattern": "/max_min/",
           "thresholds": [],
           "type": "number",
-          "unit": "decbytes"
+          "unit": "bytes"
         },
         {
           "alias": "Interface",
@@ -362,13 +362,7 @@
               }
             ]
           ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            }
-          ]
+          "tags": []
         }
       ],
       "thresholds": [],
@@ -504,13 +498,7 @@
               }
             ]
           ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            }
-          ]
+          "tags": []
         }
       ],
       "thresholds": [],
@@ -534,7 +522,7 @@
       "yaxes": [
         {
           "decimals": null,
-          "format": "decbytes",
+          "format": "bytes",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -567,7 +555,7 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 12,
+        "w": 14,
         "x": 0,
         "y": 8
       },
@@ -649,6 +637,8 @@
           "measurement": "interface_rx",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT non_negative_derivative(mean(\"value\"), 10s) FROM \"interface_rx\" WHERE (\"host\" =~ /^$host$/ AND \"type\" =~ /if_(octets)/ AND \"instance\" =~ /^$interface$/) AND $timeFilter GROUP BY time($__interval), \"host\", \"instance\", \"type\" fill(null)",
+          "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -665,7 +655,7 @@
               },
               {
                 "params": [
-                  "1s"
+                  "10s"
                 ],
                 "type": "non_negative_derivative"
               }
@@ -673,12 +663,6 @@
           ],
           "tags": [
             {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            },
-            {
-              "condition": "AND",
               "key": "type",
               "operator": "=~",
               "value": "/if_(octets)/"
@@ -718,12 +702,6 @@
                 "type"
               ],
               "type": "tag"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
             }
           ],
           "measurement": "interface_tx",
@@ -745,7 +723,7 @@
               },
               {
                 "params": [
-                  "1s"
+                  "10s"
                 ],
                 "type": "non_negative_derivative"
               }
@@ -753,12 +731,6 @@
           ],
           "tags": [
             {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            },
-            {
-              "condition": "AND",
               "key": "type",
               "operator": "=~",
               "value": "/if_(octets)/"
@@ -792,7 +764,7 @@
       },
       "yaxes": [
         {
-          "format": "Bps",
+          "format": "bps",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -823,8 +795,8 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 12,
-        "x": 12,
+        "w": 10,
+        "x": 14,
         "y": 8
       },
       "hiddenSeries": false,
@@ -898,13 +870,7 @@
               }
             ]
           ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            }
-          ]
+          "tags": []
         },
         {
           "alias": "5m",
@@ -948,13 +914,7 @@
               }
             ]
           ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            }
-          ]
+          "tags": []
         },
         {
           "alias": "15m",
@@ -1054,13 +1014,564 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "InfluxDB",
+      "decimals": 1,
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 19,
+        "x": 0,
+        "y": 17
+      },
+      "hiddenSeries": false,
+      "id": 22,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sort": null,
+        "sortDesc": null,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "connected",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "$tag_type_instance",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "type_instance"
+              ],
+              "type": "tag"
+            }
+          ],
+          "measurement": "iptables_value",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT non_negative_derivative(mean(\"value\"), 10s) FROM \"iptables_value\" WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_tx' AND \"type_instance\" =~ /tx_$type_instance/) AND $timeFilter GROUP BY time($__interval), \"type_instance\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "10s"
+                ],
+                "type": "non_negative_derivative"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host",
+              "operator": "=~",
+              "value": "/^$host$/"
+            },
+            {
+              "condition": "AND",
+              "key": "type",
+              "operator": "=",
+              "value": "ipt_bytes"
+            },
+            {
+              "condition": "AND",
+              "key": "instance",
+              "operator": "=",
+              "value": "mangle-iptmon_tx"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "LAN TX",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "bps",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 9,
+        "w": 5,
+        "x": 19,
+        "y": 17
+      },
+      "id": 25,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "align": "auto",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "hidden"
+        },
+        {
+          "alias": "Host",
+          "align": "left",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/type_instance/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        },
+        {
+          "alias": "Bytes",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "/max_min/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "bytes"
+        }
+      ],
+      "targets": [
+        {
+          "alias": "$tag_type_instance",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "type_instance"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "iptables_value",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT max(\"value\")-min(\"value\") FROM \"iptables_value\" WHERE (\"type\" = 'ipt_bytes' AND instance = 'mangle-iptmon_tx' AND \"type_instance\" =~ /tx_$type_instance/ ) AND $timeFilter GROUP BY \"type_instance\" fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host",
+              "operator": "=~",
+              "value": "/^$host$/"
+            },
+            {
+              "condition": "AND",
+              "key": "type",
+              "operator": "=",
+              "value": "ipt_bytes"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "LAN TX Totals",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "InfluxDB",
+      "decimals": 1,
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 19,
+        "x": 0,
+        "y": 26
+      },
+      "hiddenSeries": false,
+      "id": 23,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sort": null,
+        "sortDesc": null,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "connected",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "$tag_type_instance",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "type_instance"
+              ],
+              "type": "tag"
+            }
+          ],
+          "hide": false,
+          "measurement": "iptables_value",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT non_negative_derivative(mean(\"value\"), 10s) FROM \"iptables_value\" WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_rx' AND \"type_instance\" =~ /rx_$type_instance/) AND $timeFilter GROUP BY time($__interval), \"type_instance\"",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "10s"
+                ],
+                "type": "non_negative_derivative"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host",
+              "operator": "=~",
+              "value": "/^$host$/"
+            },
+            {
+              "condition": "AND",
+              "key": "type",
+              "operator": "=",
+              "value": "ipt_bytes"
+            },
+            {
+              "condition": "AND",
+              "key": "instance",
+              "operator": "=",
+              "value": "mangle-iptmon_rx"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "LAN RX",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "bps",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 9,
+        "w": 5,
+        "x": 19,
+        "y": 26
+      },
+      "id": 26,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "align": "auto",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "hidden"
+        },
+        {
+          "alias": "Host",
+          "align": "left",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/type_instance/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        },
+        {
+          "alias": "Bytes",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "/max_min/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "bytes"
+        }
+      ],
+      "targets": [
+        {
+          "alias": "$tag_type_instance",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "type_instance"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "iptables_value",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT max(\"value\")-min(\"value\") FROM \"iptables_value\" WHERE (\"type\" = 'ipt_bytes' AND instance = 'mangle-iptmon_rx' AND \"type_instance\" =~ /rx_$type_instance/ ) AND $timeFilter GROUP BY \"type_instance\" fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host",
+              "operator": "=~",
+              "value": "/^$host$/"
+            },
+            {
+              "condition": "AND",
+              "key": "type",
+              "operator": "=",
+              "value": "ipt_bytes"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "LAN RX Totals",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "InfluxDB",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 17
+        "y": 35
       },
       "hiddenSeries": false,
       "id": 2,
@@ -1152,12 +1663,6 @@
           ],
           "tags": [
             {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            },
-            {
-              "condition": "AND",
               "key": "type",
               "operator": "=~",
               "value": "/^(signal.*)/"
@@ -1218,7 +1723,7 @@
         "h": 4,
         "w": 2,
         "x": 12,
-        "y": 17
+        "y": 35
       },
       "id": 16,
       "options": {
@@ -1308,7 +1813,7 @@
         "h": 9,
         "w": 10,
         "x": 14,
-        "y": 17
+        "y": 35
       },
       "hiddenSeries": false,
       "id": 8,
@@ -1389,13 +1894,7 @@
               }
             ]
           ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            }
-          ]
+          "tags": []
         }
       ],
       "thresholds": [],
@@ -1445,7 +1944,7 @@
         "h": 5,
         "w": 2,
         "x": 12,
-        "y": 21
+        "y": 39
       },
       "id": 18,
       "options": {
@@ -1538,23 +2037,23 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
         "datasource": "InfluxDB",
-        "definition": "",
+        "definition": "SHOW TAG VALUES FROM \"iptables_value\" WITH KEY=type_instance",
         "hide": 0,
         "includeAll": true,
         "label": "Host",
         "multi": false,
-        "name": "host",
+        "name": "type_instance",
         "options": [],
-        "query": "SHOW TAG VALUES FROM \"iwinfo_value\" WITH KEY=host",
+        "query": "SHOW TAG VALUES FROM \"iptables_value\" WITH KEY=type_instance",
         "refresh": 1,
-        "regex": "",
+        "regex": "/(?:tx|rx)_(\\D[a-zA-Z0-9.-]+)/",
         "skipUrlSync": false,
-        "sort": 0,
+        "sort": 1,
         "tagValuesQuery": "",
         "tags": [],
         "tagsQuery": "",
@@ -1564,19 +2063,19 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
         "datasource": "InfluxDB",
-        "definition": "",
+        "definition": "SHOW TAG VALUES FROM \"interface_rx\" WITH KEY=instance",
         "hide": 0,
         "includeAll": true,
         "label": "Interface",
         "multi": false,
         "name": "interface",
         "options": [],
-        "query": "SHOW TAG VALUES FROM \"interface_rx\" WITH KEY=instance WHERE host =~ /$host/",
+        "query": "SHOW TAG VALUES FROM \"interface_rx\" WITH KEY=instance",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -1595,14 +2094,14 @@
           "value": "$__all"
         },
         "datasource": "InfluxDB",
-        "definition": "",
+        "definition": "SHOW TAG VALUES FROM \"iwinfo_value\" WITH KEY=instance ",
         "hide": 0,
         "includeAll": true,
         "label": "Wi-Fi Interface",
         "multi": false,
         "name": "wifi_if",
         "options": [],
-        "query": "SHOW TAG VALUES FROM \"iwinfo_value\" WITH KEY=instance WHERE host =~ /$host/",
+        "query": "SHOW TAG VALUES FROM \"iwinfo_value\" WITH KEY=instance ",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -1616,7 +2115,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {
