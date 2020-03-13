@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": 3484,
   "graphTooltip": 1,
-  "iteration": 1584047438999,
+  "iteration": 1584048140837,
   "links": [],
   "panels": [
     {
@@ -743,7 +743,7 @@
       },
       "yaxes": [
         {
-          "format": "bps",
+          "format": "Bps",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -805,7 +805,7 @@
           "pattern": "/max_min/",
           "thresholds": [],
           "type": "number",
-          "unit": "bytes"
+          "unit": "decbytes"
         },
         {
           "alias": "Interface",
@@ -925,7 +925,7 @@
           "pattern": "/max_min/",
           "thresholds": [],
           "type": "number",
-          "unit": "bytes"
+          "unit": "decbytes"
         },
         {
           "alias": "Interface",
@@ -1134,7 +1134,7 @@
       "yaxes": [
         {
           "decimals": null,
-          "format": "bps",
+          "format": "Bps",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -1147,7 +1147,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -1170,8 +1170,8 @@
       "pageSize": null,
       "showHeader": true,
       "sort": {
-        "col": 0,
-        "desc": true
+        "col": 1,
+        "desc": false
       },
       "styles": [
         {
@@ -1193,7 +1193,7 @@
           "decimals": 2,
           "pattern": "/type_instance/",
           "thresholds": [],
-          "type": "number",
+          "type": "string",
           "unit": "short"
         },
         {
@@ -1211,7 +1211,7 @@
           "pattern": "/max_min/",
           "thresholds": [],
           "type": "number",
-          "unit": "bytes"
+          "unit": "decbytes"
         }
       ],
       "targets": [
@@ -1410,7 +1410,7 @@
       "yaxes": [
         {
           "decimals": null,
-          "format": "bps",
+          "format": "Bps",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -1423,7 +1423,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -1446,8 +1446,8 @@
       "pageSize": null,
       "showHeader": true,
       "sort": {
-        "col": 0,
-        "desc": true
+        "col": 1,
+        "desc": false
       },
       "styles": [
         {
@@ -1469,7 +1469,7 @@
           "decimals": 2,
           "pattern": "/type_instance/",
           "thresholds": [],
-          "type": "number",
+          "type": "string",
           "unit": "short"
         },
         {
@@ -1487,7 +1487,7 @@
           "pattern": "/max_min/",
           "thresholds": [],
           "type": "number",
-          "unit": "bytes"
+          "unit": "decbytes"
         }
       ],
       "targets": [
@@ -2111,7 +2111,7 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
