@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": 3484,
   "graphTooltip": 1,
-  "iteration": 1584208514270,
+  "iteration": 1584256807028,
   "links": [],
   "panels": [
     {
@@ -616,7 +616,7 @@
           "measurement": "interface_rx",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT non_negative_derivative(mean(\"value\"), 10s) FROM \"interface_rx\" WHERE (\"host\" =~ /^$host$/ AND \"type\" =~ /if_(octets)/ AND \"instance\" =~ /^$interface$/) AND $timeFilter GROUP BY time($__interval), \"host\", \"instance\", \"type\" fill(null)",
+          "query": "SELECT non_negative_derivative(mean(\"value\"), 1s) FROM \"interface_rx\" WHERE (\"host\" =~ /^$host$/ AND \"type\" =~ /if_(octets)/ AND \"instance\" =~ /^$interface$/) AND $timeFilter GROUP BY time($__interval), \"host\", \"instance\", \"type\" fill(null)",
           "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
@@ -634,7 +634,7 @@
               },
               {
                 "params": [
-                  "10s"
+                  "1s"
                 ],
                 "type": "non_negative_derivative"
               }
@@ -702,7 +702,7 @@
               },
               {
                 "params": [
-                  "10s"
+                  "1s"
                 ],
                 "type": "non_negative_derivative"
               }
@@ -1068,7 +1068,7 @@
           "measurement": "iptables_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT non_negative_derivative(mean(\"value\"), 10s) FROM $ip_family WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_tx' AND \"type_instance\" =~ /tx_$type_instance/) AND $timeFilter GROUP BY time($__interval), type_instance",
+          "query": "SELECT non_negative_derivative(mean(\"value\"), 1s) FROM $ip_family WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_tx' AND \"type_instance\" =~ /tx_$type_instance/) AND $timeFilter GROUP BY time($__interval), type_instance",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -1086,7 +1086,7 @@
               },
               {
                 "params": [
-                  "10s"
+                  "1s"
                 ],
                 "type": "non_negative_derivative"
               }
@@ -1344,7 +1344,7 @@
           "measurement": "iptables_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT non_negative_derivative(mean(\"value\"), 10s) FROM $ip_family WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_rx' AND \"type_instance\" =~ /rx_$type_instance/) AND $timeFilter GROUP BY time($__interval), type_instance",
+          "query": "SELECT non_negative_derivative(mean(\"value\"), 1s) FROM $ip_family WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_rx' AND \"type_instance\" =~ /rx_$type_instance/) AND $timeFilter GROUP BY time($__interval), type_instance",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
@@ -1362,7 +1362,7 @@
               },
               {
                 "params": [
-                  "10s"
+                  "1s"
                 ],
                 "type": "non_negative_derivative"
               }
