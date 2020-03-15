@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": 3484,
   "graphTooltip": 1,
-  "iteration": 1584048140837,
+  "iteration": 1584208514270,
   "links": [],
   "panels": [
     {
@@ -1068,7 +1068,7 @@
           "measurement": "iptables_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT non_negative_derivative(mean(\"value\"), 10s) FROM \"iptables_value\" WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_tx' AND \"type_instance\" =~ /tx_$type_instance/) AND $timeFilter GROUP BY time($__interval), \"type_instance\"",
+          "query": "SELECT non_negative_derivative(mean(\"value\"), 10s) FROM $ip_family WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_tx' AND \"type_instance\" =~ /tx_$type_instance/) AND $timeFilter GROUP BY time($__interval), type_instance",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -1240,7 +1240,7 @@
           "measurement": "iptables_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT max(\"value\")-min(\"value\") FROM \"iptables_value\" WHERE (\"type\" = 'ipt_bytes' AND instance = 'mangle-iptmon_tx' AND \"type_instance\" =~ /tx_$type_instance/ ) AND $timeFilter GROUP BY \"type_instance\" fill(null)",
+          "query": "SELECT max(\"value\")-min(\"value\") FROM $ip_family WHERE (\"type\" = 'ipt_bytes' AND instance = 'mangle-iptmon_tx' AND \"type_instance\" =~ /tx_$type_instance/ ) AND $timeFilter GROUP BY \"type_instance\"",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
@@ -1344,7 +1344,7 @@
           "measurement": "iptables_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT non_negative_derivative(mean(\"value\"), 10s) FROM \"iptables_value\" WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_rx' AND \"type_instance\" =~ /rx_$type_instance/) AND $timeFilter GROUP BY time($__interval), \"type_instance\"",
+          "query": "SELECT non_negative_derivative(mean(\"value\"), 10s) FROM $ip_family WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_rx' AND \"type_instance\" =~ /rx_$type_instance/) AND $timeFilter GROUP BY time($__interval), type_instance",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
@@ -1516,7 +1516,7 @@
           "measurement": "iptables_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT max(\"value\")-min(\"value\") FROM \"iptables_value\" WHERE (\"type\" = 'ipt_bytes' AND instance = 'mangle-iptmon_rx' AND \"type_instance\" =~ /rx_$type_instance/ ) AND $timeFilter GROUP BY \"type_instance\" fill(null)",
+          "query": "SELECT max(\"value\")-min(\"value\") FROM $ip_family WHERE (\"type\" = 'ipt_bytes' AND instance = 'mangle-iptmon_rx' AND \"type_instance\" =~ /rx_$type_instance/ ) AND $timeFilter GROUP BY \"type_instance\"",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
@@ -2100,6 +2100,43 @@
         "query": "SHOW TAG VALUES FROM \"iwinfo_value\" WITH KEY=instance ",
         "refresh": 1,
         "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": "iptables_value,ip6tables_value",
+        "current": {
+          "selected": true,
+          "text": "iptables_value",
+          "value": "iptables_value"
+        },
+        "datasource": "InfluxDB",
+        "definition": "show measurements",
+        "hide": 0,
+        "includeAll": false,
+        "label": "IP Family",
+        "multi": false,
+        "name": "ip_family",
+        "options": [
+          {
+            "selected": false,
+            "text": "ip6tables_value",
+            "value": "ip6tables_value"
+          },
+          {
+            "selected": true,
+            "text": "iptables_value",
+            "value": "iptables_value"
+          }
+        ],
+        "query": "show measurements",
+        "refresh": 0,
+        "regex": "/(ip(\\d)?tables_value)/",
         "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
