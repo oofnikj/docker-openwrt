@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": 3484,
   "graphTooltip": 1,
-  "iteration": 1584256807028,
+  "iteration": 1584446406891,
   "links": [],
   "panels": [
     {
@@ -579,7 +579,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "$tag_instance rx",
+          "alias": "rx_$tag_instance",
           "dsType": "influxdb",
           "groupBy": [
             {
@@ -616,8 +616,8 @@
           "measurement": "interface_rx",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT non_negative_derivative(mean(\"value\"), 1s) FROM \"interface_rx\" WHERE (\"host\" =~ /^$host$/ AND \"type\" =~ /if_(octets)/ AND \"instance\" =~ /^$interface$/) AND $timeFilter GROUP BY time($__interval), \"host\", \"instance\", \"type\" fill(null)",
-          "rawQuery": false,
+          "query": "SELECT 8 * non_negative_derivative(mean(\"value\"), 1s) FROM \"interface_rx\" WHERE (\"type\" =~ /if_(octets)/ AND \"instance\" =~ /^$interface$/) AND $timeFilter GROUP BY time($__interval), \"host\", \"instance\", \"type\"",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -655,7 +655,7 @@
           ]
         },
         {
-          "alias": "$tag_instance tx",
+          "alias": "tx_$tag_instance",
           "dsType": "influxdb",
           "groupBy": [
             {
@@ -686,6 +686,8 @@
           "measurement": "interface_tx",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT 8 * non_negative_derivative(mean(\"value\"), 1s) FROM \"interface_tx\" WHERE (\"type\" =~ /if_(octets)/ AND \"instance\" =~ /^$interface$/) AND $timeFilter GROUP BY time($__interval), \"host\", \"instance\", \"type\"",
+          "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
           "select": [
@@ -743,7 +745,7 @@
       },
       "yaxes": [
         {
-          "format": "Bps",
+          "format": "bps",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -1068,7 +1070,7 @@
           "measurement": "iptables_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT non_negative_derivative(mean(\"value\"), 1s) FROM $ip_family WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_tx' AND \"type_instance\" =~ /tx_$type_instance/) AND $timeFilter GROUP BY time($__interval), type_instance",
+          "query": "SELECT 8 * non_negative_derivative(mean(\"value\"), 1s) FROM $ip_family WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_tx' AND \"type_instance\" =~ /tx_$type_instance/) AND $timeFilter GROUP BY time($__interval), type_instance",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -1134,7 +1136,7 @@
       "yaxes": [
         {
           "decimals": null,
-          "format": "Bps",
+          "format": "bps",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -1344,7 +1346,7 @@
           "measurement": "iptables_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT non_negative_derivative(mean(\"value\"), 1s) FROM $ip_family WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_rx' AND \"type_instance\" =~ /rx_$type_instance/) AND $timeFilter GROUP BY time($__interval), type_instance",
+          "query": "SELECT 8 * non_negative_derivative(mean(\"value\"), 1s) FROM $ip_family WHERE (\"type\" = 'ipt_bytes' AND \"instance\" = 'mangle-iptmon_rx' AND \"type_instance\" =~ /rx_$type_instance/) AND $timeFilter GROUP BY time($__interval), type_instance",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
@@ -1410,7 +1412,7 @@
       "yaxes": [
         {
           "decimals": null,
-          "format": "Bps",
+          "format": "bps",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -2179,5 +2181,5 @@
   "timezone": "",
   "title": "OpenWRT",
   "uid": "8JiGCU_Wz",
-  "version": 1
+  "version": 2
 }
