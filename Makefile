@@ -3,7 +3,10 @@
 include openwrt.conf
 
 build:
-	@docker build --build-arg ROOT_PW=${ROOT_PW} -t ${BUILD_TAG} .
+	@docker build \
+	  --build-arg ROOT_PW=${ROOT_PW} \
+		--build-arg OPENWRT_TAG=${OPENWRT_TAG} \
+		-t ${BUILD_TAG} .
 
 run:
 	./run.sh
