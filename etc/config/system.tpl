@@ -2,11 +2,11 @@ config system
     option ttylogin       '0'
     option urandom_seed   '0'
     option zonename       'UTC'
-    option log_size       '8192'
+    option log_size       '256'
     option cronloglevel   '5'
     option log_proto      'udp'
     option log_file       '/proc/1/fd/1'
-    option conloglevel    '8'
+    option conloglevel    '5'
 
 config timeserver 'ntp'
     list server '0.openwrt.pool.ntp.org'
