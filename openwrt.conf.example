@@ -1,6 +1,7 @@
 ### Sample OpenWRT config file ###
 
 # general
+OPENWRT_TAG=x86-64-19.07.2
 BUILD_TAG=openwrt
 CONTAINER=openwrt_1
 ROOT_PW=changeme123
