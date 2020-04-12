@@ -61,7 +61,6 @@ function _init_network() {
 
   docker network create --driver macvlan \
     -o parent=$WAN_PARENT \
-    --subnet $WAN_SUBNET \
     $WAN_NAME || exit 1
 }
 
