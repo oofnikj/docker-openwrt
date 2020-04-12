@@ -13,5 +13,6 @@ RUN opkg remove dnsmasq && \
       kmod-mac80211 \
       iperf3 \
       dnsmasq-full
+RUN opkg list-upgradable | awk '{print $1}' | xargs opkg upgrade
 
 CMD [ "/sbin/init" ]
