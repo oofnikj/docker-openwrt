@@ -1,4 +1,4 @@
-.PHONY: build run clean install uninstall
+.PHONY: build build-rpi run clean install uninstall
 
 include openwrt.conf
 
@@ -7,6 +7,12 @@ build:
 	  --build-arg ROOT_PW=${ROOT_PW} \
 		--build-arg OPENWRT_TAG=${OPENWRT_TAG} \
 		-t ${BUILD_TAG} .
+
+build-rpi:
+	./build-rpi.sh
+	@echo 
+	@echo "Send the image to your Raspberry Pi with this command:"
+	@echo "docker save ${BUILD_TAG} | ssh <your_raspberry_pi_host> docker load"
 
 run:
 	./run.sh

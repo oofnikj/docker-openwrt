@@ -1,0 +1,10 @@
+FROM scratch
+COPY . .
+ARG ROOT_PW
+RUN echo -e "${ROOT_PW}\n${ROOT_PW}" | passwd
+RUN mkdir -p /var/lock
+RUN opkg update && \
+    opkg list-upgradable | awk '{print $1}' | xargs opkg upgrade
+
+EXPOSE 22 443 80
+CMD [ "/sbin/init" ]
