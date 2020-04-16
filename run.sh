@@ -69,7 +69,7 @@ function _set_hairpin() {
   for i in {1..10}; do
     echo -n '.'
     sudo ip netns exec $CONTAINER ip link set $WIFI_IFACE type bridge_slave hairpin on 2>/dev/null && { echo 'ok'; break; }
-    sleep 1
+    sleep 3
   done
   if [[ $i -ge 10 ]]; then
     echo -e "\ncouldn't set hairpin mode, wifi clients will probably be unable to talk to each other"
