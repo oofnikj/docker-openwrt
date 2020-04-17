@@ -1,8 +1,8 @@
-# OpenWRT in Docker
+# OpenWrt in Docker
 
-Inspired by other projects that run `hostapd` in a Docker container. This goes one step further and boots a full network OS intended for embedded devices called [OpenWRT](https://openwrt.org/), so you can manage all aspects of your network from a user-friendly web UI.
+Inspired by other projects that run `hostapd` in a Docker container. This goes one step further and boots a full network OS intended for embedded devices called [OpenWrt](https://openwrt.org/), so you can manage all aspects of your network from a user-friendly web UI.
 
-I only tested this on x86_64, but it might work on ARM too with some minor tweaking.
+For Raspberry Pi-specific build instructions, see [Building on Raspberry Pi](./rpi.md).
 
 
 ## Dependencies
@@ -17,13 +17,13 @@ I only tested this on x86_64, but it might work on ARM too with some minor tweak
 ```
 $ make build
 ```
-If you want additional OpenWRT packages to be present in the base image, add them to the Dockerfile. Otherwise you can install them with `opkg` after bringing up the container.
+If you want additional OpenWrt packages to be present in the base image, add them to the Dockerfile. Otherwise you can install them with `opkg` after bringing up the container.
 
 A searchable package list is available on [openwrt.org](https://openwrt.org/packages/table/start).
 
 ## Configure
 
-Initial configuration is performed using a config file, `openwrt.conf`. Values read from this file at runtime are used to generate OpenWRT format config files.
+Initial configuration is performed using a config file, `openwrt.conf`. Values read from this file at runtime are used to generate OpenWrt format config files.
 
 To add or change the base configuration, modify the config templates in `etc/config/<section>.tpl`.
 
@@ -58,10 +58,8 @@ This will delete the container and all associated Docker networks so you can sta
 
 ### Hairpinning
 
-This took a couple of tries to get working. The most challenging issue was getting traffic from WLAN clients to reach each other.
 
-In order for this to work, OpenWRT bridges all interfaces in the LAN zone and sets hairpin mode (aka [reflective relay](https://lwn.net/Articles/347344/)) on the WLAN interface, meaning packets arriving on that interface can be 'reflected' back out through the same interface.
-OpenWRT is not able to set this mode from inside the container even with `NET_ADMIN` capabilities, so this must be done from the host. 
+In order for WLAN clients to see one another, OpenWrt bridges all interfaces in the LAN zone and sets hairpin mode (aka [reflective relay](https://lwn.net/Articles/347344/)) on the WLAN interface, meaning packets arriving on that interface can be 'reflected' back out through the same interface.
 
 `run.sh` tries to handle this, and prints a warning if it fails.
 

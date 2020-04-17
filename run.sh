@@ -69,7 +69,7 @@ function _set_hairpin() {
   for i in {1..10}; do
     echo -n '.'
     sudo ip netns exec $CONTAINER ip link set $WIFI_IFACE type bridge_slave hairpin on 2>/dev/null && { echo 'ok'; break; }
-    sleep 1
+    sleep 3
   done
   if [[ $i -ge 10 ]]; then
     echo -e "\ncouldn't set hairpin mode, wifi clients will probably be unable to talk to each other"
@@ -78,8 +78,8 @@ function _set_hairpin() {
 
 function _create_or_start_container() {
   docker inspect $BUILD_TAG >/dev/null 2>&1 || { echo "no image '$BUILD_TAG' found, did you forget to run 'make build'?"; exit 1; }
-  docker inspect $CONTAINER >/dev/null 2>&1
-  if [[ $? -eq 0 ]]; then
+  
+  if docker inspect $CONTAINER >/dev/null 2>&1; then
     echo "* starting container '$CONTAINER'"
     docker start $CONTAINER
   else
@@ -103,9 +103,20 @@ function _create_or_start_container() {
   fi
 }
 
+function _reload_fw() {
+  echo "* reloading firewall rules"
+  docker exec -it $CONTAINER sh -c '
+    for iptables in iptables ip6tables; do
+      for table in filter nat mangle; do
+        $iptables -t $table -F
+      done
+    done
+    /sbin/fw3 -q restart'
+}
+
 function main() {
   test -z $WIFI_IFACE && _usage
-  cd $SCRIPT_DIR
+  cd "${SCRIPT_DIR}"
   _get_phy_from_dev
   _nmcli
   _create_or_start_container
@@ -124,6 +135,7 @@ function main() {
   echo "* getting address via DHCP"
   sudo dhcpcd -q "br-${LAN_ID:0:12}"
   
+  _reload_fw
   echo "* ready"
 }
 

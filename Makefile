@@ -1,12 +1,16 @@
-.PHONY: build run clean install uninstall
+.PHONY: build build-rpi run clean install uninstall
 
 include openwrt.conf
+export
 
 build:
-	@docker build \
-	  --build-arg ROOT_PW=${ROOT_PW} \
-		--build-arg OPENWRT_TAG=${OPENWRT_TAG} \
+	docker build \
+	  --build-arg ROOT_PW \
+		--build-arg OPENWRT_TAG \
 		-t ${BUILD_TAG} .
+
+build-rpi:
+	./build-rpi.sh ${RPI_SOURCE_IMG}
 
 run:
 	./run.sh
