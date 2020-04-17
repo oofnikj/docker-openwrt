@@ -4,8 +4,9 @@ ARG ROOT_PW
 RUN echo -e "${ROOT_PW}\n${ROOT_PW}" | passwd
 RUN mkdir -p /var/lock
 RUN opkg update && \
-    opkg install iperf3 && \
+    opkg install \
+      iperf3 \
+      ip-full && \
     opkg list-upgradable | awk '{print $1}' | xargs opkg upgrade
 
-EXPOSE 22 443 80
 CMD [ "/sbin/init" ]
