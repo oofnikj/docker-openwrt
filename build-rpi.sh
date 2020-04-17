@@ -10,11 +10,11 @@
 # If building on x86, you must have qemu-arm and binfmt-support installed
 set -e
 
-source openwrt.conf
-IMG=${1:-openwrt-19.07.2-brcm2708-bcm2708-rpi-ext4-factory.img}
+IMG=${1:-'x'}
 
 
 mount_rootfs() {
+	echo "* mounting image"
 	offset=$(sfdisk -d ${IMG} | grep "${IMG}2" | sed -E 's/.*start=\s+([0-9]+).*/\1/g')
 	tmpdir=$(mktemp -u -p .)
 	mkdir -p "${tmpdir}"
@@ -22,17 +22,20 @@ mount_rootfs() {
 }
 
 docker_build() {
+	echo "* building Docker image"
 	sudo docker build \
-		--build-arg ROOT_PW=${ROOT_PW} \
+		--build-arg ROOT_PW="${ROOT_PW}" \
 		-t ${BUILD_TAG} -f Dockerfile.rpi ${tmpdir}
 }
 
 
 cleanup() {
+	echo "* cleaning up"
 	sudo umount ${tmpdir}
 	rm -rf ${tmpdir}
 }
 
+test -f ${IMG} || { echo 'no image file found'; exit 1; }
 trap cleanup EXIT
 mount_rootfs
 docker_build
