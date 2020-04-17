@@ -5,7 +5,7 @@ export
 
 build:
 	docker build \
-	  --build-arg ROOT_PW \
+		--build-arg ROOT_PW \
 		--build-arg OPENWRT_TAG \
 		-t ${BUILD_TAG} .
 
