@@ -48,3 +48,5 @@ config nlbwmon
 EOF
 # service nlbwmon restart
 ```
+
+For a more complex (and useful) solution, see [Monitoring with InfluxDB + Grafana](../monitoring/README.md)

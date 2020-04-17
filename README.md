@@ -2,7 +2,7 @@
 
 Inspired by other projects that run `hostapd` in a Docker container. This goes one step further and boots a full network OS intended for embedded devices called [OpenWrt](https://openwrt.org/), so you can manage all aspects of your network from a user-friendly web UI.
 
-For Raspberry Pi-specific build instructions, see [Building on Raspberry Pi](./rpi.md).
+For Raspberry Pi-specific build instructions, see [Building on Raspberry Pi](docs/rpi.md).
 
 
 ## Dependencies
@@ -80,10 +80,10 @@ As an alternative to installing debug packages inside your router, it's possible
 $ sudo ip netns exec ${CONTAINER} tcpdump -vvi any 
 ```
 ---
-## [OpenVPN Howto](./vpn.md)
+## [OpenVPN Howto](docs/vpn.md)
 
-## [Bandwidth Monitoring Howto](./monitoring.md)
+## [Bandwidth Monitoring Howto](docs/monitoring.md)
 
-## [Monitoring with InfluxDB + Grafana](./monitoring/README.md)
+## [Monitoring with InfluxDB + Grafana](monitoring/README.md)
 
-## [IPv6 Notes](./ipv6.md)
+## [IPv6 Notes](docs/ipv6.md)
