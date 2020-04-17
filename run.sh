@@ -78,8 +78,8 @@ function _set_hairpin() {
 
 function _create_or_start_container() {
   docker inspect $BUILD_TAG >/dev/null 2>&1 || { echo "no image '$BUILD_TAG' found, did you forget to run 'make build'?"; exit 1; }
-  docker inspect $CONTAINER >/dev/null 2>&1
-  if [[ $? -eq 0 ]]; then
+  
+  if docker inspect $CONTAINER >/dev/null 2>&1; then
     echo "* starting container '$CONTAINER'"
     docker start $CONTAINER
   else
@@ -116,7 +116,7 @@ function _reload_fw() {
 
 function main() {
   test -z $WIFI_IFACE && _usage
-  cd $SCRIPT_DIR
+  cd "${SCRIPT_DIR}"
   _get_phy_from_dev
   _nmcli
   _create_or_start_container
