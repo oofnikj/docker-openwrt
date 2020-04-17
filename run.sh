@@ -103,6 +103,17 @@ function _create_or_start_container() {
   fi
 }
 
+function _reload_fw() {
+  echo "* reloading firewall rules"
+  docker exec -it $CONTAINER sh -c '
+    for iptables in iptables ip6tables; do
+      for table in filter nat mangle; do
+        $iptables -t $table -F
+      done
+    done
+    /sbin/fw3 -q restart'
+}
+
 function main() {
   test -z $WIFI_IFACE && _usage
   cd $SCRIPT_DIR
@@ -124,6 +135,7 @@ function main() {
   echo "* getting address via DHCP"
   sudo dhcpcd -q "br-${LAN_ID:0:12}"
   
+  _reload_fw
   echo "* ready"
 }
 
