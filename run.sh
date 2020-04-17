@@ -105,7 +105,7 @@ function _create_or_start_container() {
 
 function _reload_fw() {
   echo "* reloading firewall rules"
-  docker exec -it $CONTAINER sh -c '
+  docker exec -i $CONTAINER sh -c '
     for iptables in iptables ip6tables; do
       for table in filter nat mangle; do
         $iptables -t $table -F
