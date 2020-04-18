@@ -24,7 +24,7 @@ First download and extract the OpenWRT factory image for your Pi. Refer to the [
 
 The variable `RPI_SOURCE_IMG` can be specified in openwrt.conf or on the command line:
 ```
-$ https://downloads.openwrt.org/releases/19.07.2/targets/brcm2708/bcm2708/openwrt-19.07.2-brcm2708-bcm2708-rpi-ext4-factory.img.gz
+$ wget https://downloads.openwrt.org/releases/19.07.2/targets/brcm2708/bcm2708/openwrt-19.07.2-brcm2708-bcm2708-rpi-ext4-factory.img.gz
 $ gzip -d openwrt-*.img.gz
 $ make build-rpi RPI_SOURCE_IMG=openwrt-19.07.2-brcm2708-bcm2708-rpi-ext4-factory.img
 ```
