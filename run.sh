@@ -33,7 +33,7 @@ function _get_phy_from_dev() {
 function _cleanup() {
   echo -e "\n* cleaning up..."
   echo "* stopping container"
-  docker stop openwrt_1 >/dev/null
+  docker stop $CONTAINER >/dev/null
   echo "* cleaning up netns symlink"
   sudo rm -rf /var/run/netns/$CONTAINER
   echo "* removing DHCP lease"
