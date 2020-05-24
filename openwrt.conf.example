@@ -20,6 +20,8 @@ UPSTREAM_DNS_SERVER=8.8.8.8
 
 # Static IP address configuration for OpenWRT LAN
 LAN_NAME=openwrt-lan
+# host interface which will provide the LAN link for OpenWRT
+LAN_PARENT=eth1
 LAN_DOMAIN=home
 LAN_SUBNET=192.168.16.0/24
 LAN6_SUBNET=fd99:1234::/48

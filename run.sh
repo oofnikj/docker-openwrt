@@ -55,7 +55,8 @@ function _gen_config() {
 
 function _init_network() {
   echo "* setting up docker network"
-  docker network create --driver bridge \
+  docker network create --driver macvlan \
+    -o parent=$LAN_PARENT \
     --subnet $LAN_SUBNET \
     $LAN_NAME || exit 1
 
