@@ -3,8 +3,8 @@
 ## general
 # source image for Raspberry Pi build target
 SOURCE_IMG=openwrt-19.07.2-brcm2708-bcm2708-rpi-ext4-factory.img
-# source tag for build (x86) target
-OPENWRT_TAG=x86-64-19.07.2
+# source for build (x86) target
+OPENWRT_SOURCE_VER=19.07.3
 # final tag for built Docker image
 BUILD_TAG=openwrt
 # container name 
