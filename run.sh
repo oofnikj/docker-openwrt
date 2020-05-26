@@ -36,8 +36,8 @@ function _cleanup() {
   docker stop $CONTAINER >/dev/null
   echo "* cleaning up netns symlink"
   sudo rm -rf /var/run/netns/$CONTAINER
-  echo "* removing DHCP lease"
-  sudo dhcpcd -q -k "br-${LAN_ID:0:12}"
+  echo "* removing host macvlan interface"
+  sudo ip link del dev macvlan0
   echo -ne "* finished"
 }
 
@@ -132,9 +132,13 @@ function main() {
 
   _set_hairpin $WIFI_IFACE
 
-  LAN_ID=$(docker network inspect $LAN_NAME -f "{{.Id}}")
+  echo "* setting up host macvlan interface"
+  sudo ip link add macvlan0 link $LAN_PARENT type macvlan mode bridge
+  sudo ip link set macvlan0 up
+  sudo ip route add $LAN_SUBNET dev macvlan0
+
   echo "* getting address via DHCP"
-  sudo dhcpcd -q "br-${LAN_ID:0:12}"
+  sudo dhcpcd -q macvlan0
   
   _reload_fw
   echo "* ready"
