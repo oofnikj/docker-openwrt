@@ -1,5 +1,6 @@
-ARG OPENWRT_TAG
-FROM openwrtorg/rootfs:${OPENWRT_TAG}
+FROM scratch
+ARG OPENWRT_SOURCE_VER
+ADD openwrt-${OPENWRT_SOURCE_VER}-x86-64-generic-rootfs.tar.gz /
 ARG ROOT_PW
 RUN echo -e "${ROOT_PW}\n${ROOT_PW}" | passwd
 RUN mkdir -p /var/lock
