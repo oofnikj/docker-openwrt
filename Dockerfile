@@ -12,7 +12,9 @@ RUN opkg remove dnsmasq && \
       ip-full \
       kmod-mac80211 \
       iperf3 \
-      dnsmasq-full
+      dnsmasq-full \
+      iptables-mod-checksum
 RUN opkg list-upgradable | awk '{print $1}' | xargs opkg upgrade
+RUN echo "iptables -A POSTROUTING -t mangle -p udp --dport 68 -j CHECKSUM --checksum-fill" >> /etc/firewall.user
 
 CMD [ "/sbin/init" ]
