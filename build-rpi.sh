@@ -8,7 +8,7 @@
 # to choose the right image
 #
 # If building on x86, you must have qemu-arm and binfmt-support installed
-set -ex
+set -e
 
 IMG=${1:-'image.img'}
 
