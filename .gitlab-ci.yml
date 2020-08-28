@@ -12,6 +12,7 @@ build:
   script:
     - cp openwrt.conf.example openwrt.conf
     - sed -i -E "s@(BUILD_TAG=).+@\1$CI_IMAGE@" openwrt.conf
+    - apk add make
     - make build
     - docker push $CI_IMAGE
     - docker push $CI_IMAGE:19.07.3-x86_64
