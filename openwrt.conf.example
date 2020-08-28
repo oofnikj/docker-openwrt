@@ -2,37 +2,43 @@
 
 ## general
 # source image for Raspberry Pi build target
-SOURCE_IMG=openwrt-19.07.2-brcm2708-bcm2708-rpi-ext4-factory.img
+SOURCE_IMG=openwrt-19.07.3-brcm2708-bcm2708-rpi-ext4-factory.img
 # source for build (x86) target
 OPENWRT_SOURCE_VER=19.07.3
-# final tag for built Docker image
+# image tag for pre-built Docker image, or if building locally
 BUILD_TAG=openwrt
 # container name 
 CONTAINER=openwrt_1
 ROOT_PW=changeme123
 
-# docker network settings
-# wan
+## Docker network settings
+# name of the WAN Docker network
 WAN_NAME=openwrt-wan
 # host interface which will provide the WAN link for OpenWRT
 WAN_PARENT=eth0
+# upstream DNS for OpenWrt
 UPSTREAM_DNS_SERVER=8.8.8.8
 
-# Static IP address configuration for OpenWRT LAN
+# name of the LAN Docker network
 LAN_NAME=openwrt-lan
-# host interface which will provide the LAN link for OpenWRT
-LAN_PARENT=eth1
+# Host interface which will provide the LAN link for OpenWRT.
+# Can be a physical interface or a VLAN of the primary interface.
+# For example if WAN_PARENT is eth0, LAN_PARENT can be eth0.10 for 
+# VLAN 10. VLAN interface will be created if it doesn't exist.
+LAN_PARENT=eth0.10
+# DNS search domain for LAN DHCP clients
 LAN_DOMAIN=home
+# Subnet configuration for LAN network
 LAN_SUBNET=192.168.16.0/24
 LAN6_SUBNET=fd99:1234::/48
 # Set LAN_ADDR to something other than the first available address
-# in the subnet - Docker will claim this address for the host
+# in the subnet - Docker will claim this address for the host.
 LAN_ADDR=192.168.16.2
 # openwrt doesn't accept CIDR notation; must match LAN_SUBNET
 LAN_NETMASK=255.255.255.0
 
 # wifi settings
-WIFI_IFACE=wlp2s0
+WIFI_IFACE=wlan0
 WIFI_SSID=test123
 WIFI_ENCRYPTION=psk2
 WIFI_KEY=12345678

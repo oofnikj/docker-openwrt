@@ -26,13 +26,15 @@ A searchable package list is available on [openwrt.org](https://openwrt.org/pack
 
 ## Configure
 
-Initial configuration is performed using a config file, `openwrt.conf`. Values read from this file at runtime are used to generate OpenWrt format config files.
+Initial configuration is performed using a config file, `openwrt.conf`. Values read from this file at runtime are used to generate OpenWrt format config files from templates in `etc/config/*.tpl`.
 
-To add or change the base configuration, modify the config templates in `etc/config/<section>.tpl`.
+You can use the included `openwrt.conf.example` as a baseline, which explains the values.
 
-You can of course make persistent changes in the UI and download a backup of your full router configuration by navigating to System > Backup / Flash Firmware and clicking Backup.
+It is also possible to make persistent changes in the UI and download a backup of your full router configuration by navigating to System > Backup / Flash Firmware and clicking Backup.
 
 ## Run
+
+Prepare your `openwrt.conf` file as explained above and execute the `make run` target:
 ```
 $ make run
 ```
