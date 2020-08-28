@@ -9,12 +9,15 @@ build:
   stage: build
   services:
    - docker:dind
+  variables:
+    TAG: 19.07.3-x86_64
   script:
     - cp openwrt.conf.example openwrt.conf
     - sed -i -E "s@(BUILD_TAG=).+@\1$CI_IMAGE@" openwrt.conf
     - apk add make
     - make build
+    - docker tag $CI_IMAGE $CI_IMAGE:$TAG
     - docker push $CI_IMAGE
-    - docker push $CI_IMAGE:19.07.3-x86_64
+    - docker push $CI_IMAGE:$TAG
   only:
     - master
