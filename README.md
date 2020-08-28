@@ -1,5 +1,7 @@
 # OpenWrt in Docker
 
+[![pipeline status](https://gitlab.com/oofnik/docker-openwrt/badges/master/pipeline.svg)](https://gitlab.com/oofnik/docker-openwrt/-/commits/master)
+
 Inspired by other projects that run `hostapd` in a Docker container. This goes one step further and boots a full network OS intended for embedded devices called [OpenWrt](https://openwrt.org/), so you can manage all aspects of your network from a user-friendly web UI.
 
 For Raspberry Pi-specific instructions, see [Building on Raspberry Pi](docs/rpi.md).
