@@ -6,7 +6,7 @@ RUN mkdir -p /var/lock
 RUN opkg update && \
     opkg install \
       iperf3 \
-      ip-full && \
-    opkg list-upgradable | awk '{print $1}' | xargs opkg upgrade
+      ip-full
+RUN  opkg list-upgradable | awk '{print $1}' | xargs opkg upgrade || true
 
 CMD [ "/sbin/init" ]
