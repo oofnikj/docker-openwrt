@@ -24,7 +24,7 @@ mount_rootfs() {
 	offset=$(sfdisk -d ${IMG} | grep "${IMG}2" | sed -E 's/.*start=\s+([0-9]+).*/\1/g')
 	tmpdir=$(mktemp -u -p .)
 	mkdir -p "${tmpdir}"
-	mount -o loop,offset=$((512 * $offset)) -t ext4 ${IMG} ${tmpdir}
+	mount -o loop"${LOOP_ARGS}",offset=$((512 * $offset)) -t ext4 ${IMG} ${tmpdir}
 }
 
 docker_build() {

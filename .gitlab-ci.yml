@@ -41,7 +41,7 @@ build:
     - sed -i -E "s@(BUILD_TAG=).+@\1$CI_IMAGE@" openwrt.conf
     - wget -qO- $SRC_IMAGE | gzip -d > image.img
     - source openwrt.conf
-    - export ROOT_PW; export BUILD_TAG; ./build-rpi.sh
+    - export ROOT_PW; export BUILD_TAG; export LOOP_ARGS="=/tmp/dev/loop0"; ./build-rpi.sh
     - docker tag $CI_IMAGE $CI_IMAGE:$TAG
     - docker push $CI_IMAGE:$TAG
 
