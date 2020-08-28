@@ -1,9 +1,6 @@
 variables:
   CI_IMAGE: $DOCKER_HUB_USER/openwrt
 
-before_script:
-  - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
-
 build:
   image: docker:latest
   stage: build
@@ -11,6 +8,8 @@ build:
    - docker:dind
   variables:
     TAG: 19.07.3-x86_64
+  before_script:
+    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
   script:
     - cp openwrt.conf.example openwrt.conf
     - sed -i -E "s@(BUILD_TAG=).+@\1$CI_IMAGE@" openwrt.conf
@@ -27,12 +26,20 @@ build:
   stage: build
   services:
     - docker:dind
-  script:
+  before_script:
+    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
     - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - apk add util-linux
+    - |
+      mkdir -p /tmp/dev
+      mount -t devtmpfs none /tmp/dev
+      for i in $(seq 0 9); do
+        mknod -m 0660 "/tmp/dev/loop$i" b 7 "$i"
+      done
+  script:
     - cp openwrt.conf.example openwrt.conf
     - sed -i -E "s@(BUILD_TAG=).+@\1$CI_IMAGE@" openwrt.conf
     - wget -qO- $SRC_IMAGE | gzip -d > image.img
-    - apk add util-linux
     - source openwrt.conf
     - export ROOT_PW; export BUILD_TAG; ./build-rpi.sh
     - docker tag $CI_IMAGE $CI_IMAGE:$TAG
