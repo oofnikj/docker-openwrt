@@ -1,0 +1,19 @@
+variables:
+  CI_IMAGE: $DOCKER_HUB_USER/openwrt
+
+before_script:
+  - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
+
+build:
+  image: docker:latest
+  stage: build
+  services:
+   - docker:dind
+  script:
+    - cp openwrt.conf.example openwrt.conf
+    - sed -i -E "s@(BUILD_TAG=).+@\1$CI_IMAGE@" openwrt.conf
+    - make build
+    - docker push $CI_IMAGE
+    - docker push $CI_IMAGE:19.07.3-x86_64
+  only:
+    - master
