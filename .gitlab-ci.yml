@@ -43,6 +43,8 @@ build:
     - LOOP_ARGS="=/tmp/dev/loop0" ./build-rpi.sh
     - docker tag $CI_IMAGE $CI_IMAGE:$TAG
     - docker push $CI_IMAGE:$TAG
+  only:
+    - master
 
 build-rpi2:
   extends: .build-rpi
