@@ -40,8 +40,7 @@ build:
     - cp openwrt.conf.example openwrt.conf
     - sed -i -E "s@(BUILD_TAG=).+@\1$CI_IMAGE@" openwrt.conf
     - wget -qO- $SRC_IMAGE | gzip -d > image.img
-    - source openwrt.conf
-    - export ROOT_PW; export BUILD_TAG; export LOOP_ARGS="=/tmp/dev/loop0"; ./build-rpi.sh
+    - LOOP_ARGS="=/tmp/dev/loop0" ./build-rpi.sh
     - docker tag $CI_IMAGE $CI_IMAGE:$TAG
     - docker push $CI_IMAGE:$TAG
 
@@ -61,6 +60,7 @@ build-rpi4:
   extends: .build-rpi
   variables:
     SRC_IMAGE: https://downloads.openwrt.org/snapshots/targets/bcm27xx/bcm2711/openwrt-bcm27xx-bcm2711-rpi-4-ext4-factory.img.gz
+    VERSION: snapshot
     TAG: rpi4
 
 build-rpi-zero:

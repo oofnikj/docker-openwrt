@@ -8,6 +8,8 @@ build:
 	docker build \
 		--build-arg ROOT_PW \
 		--build-arg OPENWRT_SOURCE_VER \
+		--build-arg ts="$(shell date)" \
+		--build-arg version="${OPENWRT_SOURCE_VER}" \
 		-t ${BUILD_TAG} .
 	rm openwrt-${OPENWRT_SOURCE_VER}-x86-64-generic-rootfs.tar.gz
 

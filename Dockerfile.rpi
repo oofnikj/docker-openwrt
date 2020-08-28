@@ -8,5 +8,10 @@ RUN opkg update && \
       iperf3 \
       ip-full
 RUN  opkg list-upgradable | awk '{print $1}' | xargs opkg upgrade || true
+ARG ts
+ARG version
+LABEL org.opencontainers.image.created=$ts
+LABEL org.opencontainers.image.version=$version
+LABEL org.opencontainers.image.source=https://github.com/oofnikj/docker-openwrt
 
 CMD [ "/sbin/init" ]

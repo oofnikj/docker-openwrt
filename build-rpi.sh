@@ -11,6 +11,7 @@
 set -e
 
 IMG=${1:-'image.img'}
+. ./openwrt.conf
 
 check_uid() {
 	if [[ $(id -u) -ne 0 ]]; then
@@ -31,6 +32,8 @@ docker_build() {
 	echo "* building Docker image"
 	docker build \
 		--build-arg ROOT_PW="${ROOT_PW}" \
+		--build-arg ts="$(date)" \
+		--build-arg version="${VERSION:-$OPENWRT_SOURCE_VER}" \
 		-t ${BUILD_TAG} -f Dockerfile.rpi ${tmpdir}
 }
 

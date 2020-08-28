@@ -18,4 +18,10 @@ RUN opkg remove dnsmasq && \
 RUN opkg list-upgradable | awk '{print $1}' | xargs opkg upgrade
 RUN echo "iptables -A POSTROUTING -t mangle -p udp --dport 68 -j CHECKSUM --checksum-fill" >> /etc/firewall.user
 
+ARG ts
+ARG version
+LABEL org.opencontainers.image.created=$ts
+LABEL org.opencontainers.image.version=$version
+LABEL org.opencontainers.image.source=https://github.com/oofnikj/docker-openwrt
+
 CMD [ "/sbin/init" ]
