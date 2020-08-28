@@ -45,23 +45,23 @@ build:
     - docker tag $CI_IMAGE $CI_IMAGE:$TAG
     - docker push $CI_IMAGE:$TAG
 
-build-rpi2:
-  extends: .build-rpi
-  variables:
-    SRC_IMAGE: http://downloads.openwrt.org/releases/19.07.3/targets/brcm2708/bcm2709/openwrt-19.07.3-brcm2708-bcm2709-rpi-2-ext4-factory.img.gz
-    TAG: rpi2
+# build-rpi2:
+#   extends: .build-rpi
+#   variables:
+#     SRC_IMAGE: http://downloads.openwrt.org/releases/19.07.3/targets/brcm2708/bcm2709/openwrt-19.07.3-brcm2708-bcm2709-rpi-2-ext4-factory.img.gz
+#     TAG: rpi2
 
-build-rpi3:
-  extends: .build-rpi
-  variables:
-    SRC_IMAGE: https://downloads.openwrt.org/releases/19.07.3/targets/brcm2708/bcm2710/openwrt-19.07.3-brcm2708-bcm2710-rpi-3-ext4-factory.img.gz
-    TAG: rpi3
+# build-rpi3:
+#   extends: .build-rpi
+#   variables:
+#     SRC_IMAGE: https://downloads.openwrt.org/releases/19.07.3/targets/brcm2708/bcm2710/openwrt-19.07.3-brcm2708-bcm2710-rpi-3-ext4-factory.img.gz
+#     TAG: rpi3
 
-build-rpi4:
-  extends: .build-rpi
-  variables:
-    SRC_IMAGE: https://downloads.openwrt.org/snapshots/targets/bcm27xx/bcm2711/openwrt-bcm27xx-bcm2711-rpi-4-ext4-factory.img.gz
-    TAG: rpi4
+# build-rpi4:
+#   extends: .build-rpi
+#   variables:
+#     SRC_IMAGE: https://downloads.openwrt.org/snapshots/targets/bcm27xx/bcm2711/openwrt-bcm27xx-bcm2711-rpi-4-ext4-factory.img.gz
+#     TAG: rpi4
 
 build-rpi-zero:
   extends: .build-rpi
