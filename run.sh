@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # set -x 
 
 function _usage() {
@@ -6,6 +6,7 @@ function _usage() {
   echo "Usage: $0 [/path/to/openwrt.conf]"
   exit 1
 }
+
 SCRIPT_DIR=$(cd $(dirname $0) && pwd )
 DEFAULT_CONFIG_FILE=$SCRIPT_DIR/openwrt.conf
 CONFIG_FILE=${1:-$DEFAULT_CONFIG_FILE}
@@ -45,7 +46,6 @@ function _gen_config() {
   echo "* generating network config"
   set -a
   source $CONFIG_FILE
-  _get_phy_from_dev
   for file in etc/config/*.tpl; do
     envsubst <${file} >${file%.tpl}
     docker cp ${file%.tpl} $CONTAINER:/${file%.tpl}
@@ -115,22 +115,27 @@ function _reload_fw() {
     /sbin/fw3 -q restart'
 }
 
-function main() {
+function _prepare_wifi() {
+  test $WIFI_ENABLED = 'true' || return
   test -z $WIFI_IFACE && _usage
-  cd "${SCRIPT_DIR}"
   _get_phy_from_dev
   _nmcli
+  echo "* moving device $WIFI_PHY to docker network namespace"
+  sudo iw phy "$WIFI_PHY" set netns $pid
+  _set_hairpin $WIFI_IFACE
+}
+
+function main() {
+  cd "${SCRIPT_DIR}"
   _create_or_start_container
 
-  echo "* moving device $WIFI_PHY to docker network namespace"
   pid=$(docker inspect -f '{{.State.Pid}}' $CONTAINER)
-  sudo iw phy "$WIFI_PHY" set netns $pid
 
   echo "* creating netns symlink '$CONTAINER'"
   sudo mkdir -p /var/run/netns
   sudo ln -sf /proc/$pid/ns/net /var/run/netns/$CONTAINER
 
-  _set_hairpin $WIFI_IFACE
+  _prepare_wifi
 
   echo "* setting up host macvlan interface"
   sudo ip link add macvlan0 link $LAN_PARENT type macvlan mode bridge
