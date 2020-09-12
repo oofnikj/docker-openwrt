@@ -50,13 +50,13 @@ build:
 build-rpi2:
   extends: .build-rpi
   variables:
-    SRC_IMAGE: http://downloads.openwrt.org/releases/$CURRENT_STABLE_RELEASE/targets/brcm2708/bcm2709/openwrt-$CURRENT_STABLE_RELEASE-brcm2708-bcm2709-rpi-2-ext4-factory.img.gz
+    SRC_IMAGE: http://downloads.openwrt.org/releases/${CURRENT_STABLE_RELEASE}/targets/brcm2708/bcm2709/openwrt-${CURRENT_STABLE_RELEASE}-brcm2708-bcm2709-rpi-2-ext4-factory.img.gz
     TAG: rpi2
 
 build-rpi3:
   extends: .build-rpi
   variables:
-    SRC_IMAGE: https://downloads.openwrt.org/releases/$CURRENT_STABLE_RELEASE/targets/brcm2708/bcm2710/openwrt-$CURRENT_STABLE_RELEASE-brcm2708-bcm2710-rpi-3-ext4-factory.img.gz
+    SRC_IMAGE: https://downloads.openwrt.org/releases/${CURRENT_STABLE_RELEASE}/targets/brcm2708/bcm2710/openwrt-${CURRENT_STABLE_RELEASE}-brcm2708-bcm2710-rpi-3-ext4-factory.img.gz
     TAG: rpi3
 
 build-rpi4:
