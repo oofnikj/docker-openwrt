@@ -28,6 +28,7 @@ run:
 	./run.sh
 
 clean:
+	docker stop ${CONTAINER} || true
 	docker rm ${CONTAINER} || true
 	docker network rm ${LAN_NAME} ${WAN_NAME} || true
 
