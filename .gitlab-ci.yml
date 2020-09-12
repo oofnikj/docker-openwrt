@@ -1,5 +1,6 @@
 variables:
   CI_IMAGE: $DOCKER_HUB_USER/openwrt
+  CURRENT_STABLE_RELEASE: '19.07.4'
 
 build:
   image: docker:latest
@@ -7,7 +8,6 @@ build:
   services:
    - docker:dind
   variables:
-    CURRENT_STABLE_RELEASE: '19.07.4'
     TAG: $CURRENT_STABLE_RELEASE-x86_64
   before_script:
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
