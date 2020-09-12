@@ -15,6 +15,8 @@ This has been tested on a Raspberry Pi Zero W running Raspbian Lite, but should 
 | Pi 3 B / B+            | `oofnik/openwrt:rpi3`     |
 | Pi 4 / 4B              | `oofnik/openwrt:rpi4`     |
 
+**NOTE** that OpenWrt images for the Pi 3 and 4 are built for 64-bit kernels. If you are running Raspberry Pi OS 32-bit, you will be unable to run these images. It's perfectly fine to run the Pi Zero or Pi 2 images, however.
+
 ---
 ## Build 
 You can build the OpenWRT docker image on the Pi itself, or on your x86 PC with `qemu-user` and `binfmt-support` installed.
