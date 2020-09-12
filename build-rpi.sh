@@ -34,7 +34,7 @@ docker_build() {
 		--build-arg ROOT_PW="${ROOT_PW}" \
 		--build-arg ts="$(date)" \
 		--build-arg version="${VERSION:-$OPENWRT_SOURCE_VER}" \
-		-t ${BUILD_TAG} -f Dockerfile.rpi ${tmpdir}
+		-t ${IMAGE_TAG} -f Dockerfile.rpi ${tmpdir}
 }
 
 

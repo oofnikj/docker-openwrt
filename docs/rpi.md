@@ -21,9 +21,9 @@ You can build the OpenWRT docker image on the Pi itself, or on your x86 PC with 
 
 First download and extract the OpenWRT factory image for your Pi. Refer to the [OpenWrt Table of Hardware](https://openwrt.org/toh/raspberry_pi_foundation/raspberry_pi) to choose the right image. Then run the `make` target as root (need access to mount loop filesystems).
 
-The variable `RPI_SOURCE_IMG` can be specified in openwrt.conf or on the command line:
+The variable `RPI_SOURCE_IMG` can be specified in openwrt.conf or on the command line (defaults to `image.img`):
 ```
-$ wget https://downloads.openwrt.org/releases/19.07.3/targets/brcm2708/bcm2708/openwrt-19.07.3-brcm2708-bcm2708-rpi-ext4-factory.img.gz -O image.img.gz
+$ wget https://downloads.openwrt.org/releases/19.07.4/targets/brcm2708/bcm2708/openwrt-19.07.4-brcm2708-bcm2708-rpi-ext4-factory.img.gz -O image.img.gz
 $ gzip -d image.img.gz
 $ sudo make build-rpi
 ```

@@ -7,12 +7,13 @@ build:
   services:
    - docker:dind
   variables:
-    TAG: 19.07.3-x86_64
+    CURRENT_STABLE_RELEASE: '19.07.4'
+    TAG: $CURRENT_STABLE_RELEASE-x86_64
   before_script:
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
   script:
     - cp openwrt.conf.example openwrt.conf
-    - sed -i -E "s@(BUILD_TAG=).+@\1$CI_IMAGE@" openwrt.conf
+    - sed -i -E "s@(IMAGE_TAG=).+@\1$CI_IMAGE@" openwrt.conf
     - apk add make
     - make build
     - docker tag $CI_IMAGE $CI_IMAGE:$TAG
@@ -38,7 +39,7 @@ build:
       done
   script:
     - cp openwrt.conf.example openwrt.conf
-    - sed -i -E "s@(BUILD_TAG=).+@\1$CI_IMAGE@" openwrt.conf
+    - sed -i -E "s@(IMAGE_TAG=).+@\1$CI_IMAGE@" openwrt.conf
     - wget -qO- $SRC_IMAGE | gzip -d > image.img
     - LOOP_ARGS="=/tmp/dev/loop0" ./build-rpi.sh
     - docker tag $CI_IMAGE $CI_IMAGE:$TAG
@@ -49,24 +50,25 @@ build:
 build-rpi2:
   extends: .build-rpi
   variables:
-    SRC_IMAGE: http://downloads.openwrt.org/releases/19.07.3/targets/brcm2708/bcm2709/openwrt-19.07.3-brcm2708-bcm2709-rpi-2-ext4-factory.img.gz
+    SRC_IMAGE: http://downloads.openwrt.org/releases/$CURRENT_STABLE_RELEASE/targets/brcm2708/bcm2709/openwrt-$CURRENT_STABLE_RELEASE-brcm2708-bcm2709-rpi-2-ext4-factory.img.gz
     TAG: rpi2
 
 build-rpi3:
   extends: .build-rpi
   variables:
-    SRC_IMAGE: https://downloads.openwrt.org/releases/19.07.3/targets/brcm2708/bcm2710/openwrt-19.07.3-brcm2708-bcm2710-rpi-3-ext4-factory.img.gz
+    SRC_IMAGE: https://downloads.openwrt.org/releases/$CURRENT_STABLE_RELEASE/targets/brcm2708/bcm2710/openwrt-$CURRENT_STABLE_RELEASE-brcm2708-bcm2710-rpi-3-ext4-factory.img.gz
     TAG: rpi3
 
 build-rpi4:
   extends: .build-rpi
   variables:
     SRC_IMAGE: https://downloads.openwrt.org/snapshots/targets/bcm27xx/bcm2711/openwrt-bcm27xx-bcm2711-rpi-4-ext4-factory.img.gz
+# no stable release for RPi 4 (yet), so we use snapshot
     VERSION: snapshot
     TAG: rpi4
 
 build-rpi-zero:
   extends: .build-rpi
   variables:
-    SRC_IMAGE: https://downloads.openwrt.org/releases/19.07.3/targets/brcm2708/bcm2708/openwrt-19.07.3-brcm2708-bcm2708-rpi-ext4-factory.img.gz
+    SRC_IMAGE: https://downloads.openwrt.org/releases/$CURRENT_STABLE_RELEASE/targets/brcm2708/bcm2708/openwrt-$CURRENT_STABLE_RELEASE-brcm2708-bcm2708-rpi-ext4-factory.img.gz
     TAG: rpi-zero

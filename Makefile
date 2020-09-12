@@ -3,15 +3,23 @@
 include openwrt.conf
 export
 
-build:
-	wget -q https://downloads.openwrt.org/releases/${OPENWRT_SOURCE_VER}/targets/x86/64/openwrt-${OPENWRT_SOURCE_VER}-x86-64-generic-rootfs.tar.gz
+ifeq (${OPENWRT_SOURCE_VER}, snapshot)
+	ROOTFS_URL=https://downloads.openwrt.org/snapshots/targets/x86/64/openwrt-x86-64-rootfs.tar.gz
+else 
+	ROOTFS_URL=https://downloads.openwrt.org/releases/${OPENWRT_SOURCE_VER}/targets/x86/64/openwrt-${OPENWRT_SOURCE_VER}-x86-64-generic-rootfs.tar.gz
+endif
+
+rootfs.tar.gz:
+	wget ${ROOTFS_URL} -O rootfs.tar.gz
+
+build: rootfs.tar.gz
 	docker build \
 		--build-arg ROOT_PW \
 		--build-arg OPENWRT_SOURCE_VER \
 		--build-arg ts="$(shell date)" \
 		--build-arg version="${OPENWRT_SOURCE_VER}" \
-		-t ${BUILD_TAG} .
-	rm openwrt-${OPENWRT_SOURCE_VER}-x86-64-generic-rootfs.tar.gz
+		-t ${IMAGE_TAG} .
+	rm rootfs.tar.gz
 
 build-rpi:
 	./build-rpi.sh ${RPI_SOURCE_IMG}
