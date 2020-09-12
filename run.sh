@@ -22,6 +22,8 @@ function _nmcli() {
 }
 
 function _get_phy_from_dev() {
+  test $WIFI_ENABLED = 'true' || return
+  test -z $WIFI_PHY || return
   if [[ -f /sys/class/net/$WIFI_IFACE/phy80211/name ]]; then
     WIFI_PHY=$(cat /sys/class/net/$WIFI_IFACE/phy80211/name 2>/dev/null)
     echo "* got '$WIFI_PHY' for device '$WIFI_IFACE'"
@@ -45,6 +47,7 @@ function _cleanup() {
 function _gen_config() {
   echo "* generating network config"
   set -a
+  _get_phy_from_dev
   source $CONFIG_FILE
   for file in etc/config/*.tpl; do
     envsubst <${file} >${file%.tpl}
