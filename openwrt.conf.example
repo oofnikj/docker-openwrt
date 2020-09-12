@@ -1,6 +1,6 @@
 ### Sample OpenWRT config file ###
 
-## general
+## General
 # source image for Raspberry Pi build target
 SOURCE_IMG=openwrt-19.07.3-brcm2708-bcm2708-rpi-ext4-factory.img
 # source for build (x86) target
@@ -23,7 +23,7 @@ UPSTREAM_DNS_SERVER=8.8.8.8
 LAN_NAME=openwrt-lan
 # Host interface which will provide the LAN link for OpenWRT.
 # Can be a physical interface or a VLAN of the primary interface.
-# For example if WAN_PARENT is eth0, LAN_PARENT can be eth0.10 for 
+# For example if WAN_PARENT is eth0, LAN_PARENT can be eth0.10 for
 # VLAN 10. VLAN interface will be created if it doesn't exist.
 LAN_PARENT=eth0.10
 # DNS search domain for LAN DHCP clients
@@ -37,14 +37,19 @@ LAN_ADDR=192.168.16.2
 # openwrt doesn't accept CIDR notation; must match LAN_SUBNET
 LAN_NETMASK=255.255.255.0
 
-# wifi settings
+## Wifi settings
+WIFI_ENABLED=true
 WIFI_IFACE=wlan0
 WIFI_SSID=test123
 WIFI_ENCRYPTION=psk2
 WIFI_KEY=12345678
+
+# Only one of the following sections at a time (5 / 2.4 GHz) are supported!
+## 5GHz 802.11ac (if your hw supports it)
 # WIFI_HW_MODE=11a
 # WIFI_HT_MODE=VHT80
 # WIFI_CHANNEL=36
+## 2.4 GHz 802.11g
 WIFI_HW_MODE=11g
 WIFI_HT_MODE=HT20
 WIFI_CHANNEL=6
