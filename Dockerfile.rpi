@@ -5,6 +5,7 @@ RUN echo -e "${ROOT_PW}\n${ROOT_PW}" | passwd
 RUN mkdir -p /var/lock
 RUN opkg update && \
     opkg install \
+      luci \
       iperf3 \
       ip-full
 RUN  opkg list-upgradable | awk '{print $1}' | xargs opkg upgrade || true
