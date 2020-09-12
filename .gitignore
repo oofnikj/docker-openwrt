@@ -1,3 +1,4 @@
+.vscode
 openwrt.conf
 .env
 *.tar.gz
