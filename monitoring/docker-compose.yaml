@@ -3,7 +3,8 @@ services:
   grafana:
     image: grafana/grafana:6.6.2
     networks:
-      - openwrt-lan
+      openwrt-lan:
+        ipv4_address: $GF_ADDRESS
     ports:
       - "3000:3000"
     env_file:
@@ -16,7 +17,8 @@ services:
   influxdb:
     image: influxdb:1.7
     networks:
-      - openwrt-lan
+      openwrt-lan:
+        ipv4_address: $INFLUXDB_ADDRESS
     env_file: 
       - .env
     volumes:
