@@ -67,8 +67,8 @@ build-rpi4:
     VERSION: snapshot
     TAG: rpi4
 
-build-rpi-zero:
+build-rpi:
   extends: .build-rpi
   variables:
     SRC_IMAGE: https://downloads.openwrt.org/releases/$CURRENT_STABLE_RELEASE/targets/brcm2708/bcm2708/openwrt-$CURRENT_STABLE_RELEASE-brcm2708-bcm2708-rpi-ext4-factory.img.gz
-    TAG: rpi-zero
+    TAG: rpi

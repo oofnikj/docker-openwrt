@@ -10,7 +10,7 @@ This has been tested on a Raspberry Pi Zero W running Raspbian Lite, but should 
 
 | RPi version             | image:tag                |
 |------------------------|---------------------------|
-| Pi A / B / B+ / Zero W | `oofnik/openwrt:rpi-zero` |
+| Pi A / B / B+ / Zero W | `oofnik/openwrt:rpi`      |
 | Pi 2 B (all)           | `oofnik/openwrt:rpi2`     |
 | Pi 3 B / B+            | `oofnik/openwrt:rpi3`     |
 | Pi 4 / 4B              | `oofnik/openwrt:rpi4`     |
