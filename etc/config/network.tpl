@@ -1,5 +1,5 @@
 config globals globals
-    option 'ula_prefix' "${LAN6_SUBNET}"
+    option 'ula_prefix' 'auto'
 
 config 'interface'    'loopback'
     option 'ifname'   'lo'

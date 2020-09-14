@@ -28,7 +28,6 @@ LAN_PARENT=eth0.10
 LAN_DOMAIN=home
 # Subnet configuration for LAN network
 LAN_SUBNET=192.168.16.0/24
-LAN6_SUBNET=fd99:1234::/48
 # Set LAN_ADDR to something other than the first available address
 # in the subnet - Docker will claim this address for the host.
 LAN_ADDR=192.168.16.2
