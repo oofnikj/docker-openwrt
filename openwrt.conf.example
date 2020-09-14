@@ -24,6 +24,9 @@ LAN_NAME=openwrt-lan
 # For example if WAN_PARENT is eth0, LAN_PARENT can be eth0.10 for
 # VLAN 10. VLAN interface will be created if it doesn't exist.
 LAN_PARENT=eth0.10
+# Docker network driver for LAN interface, either 'bridge' or 'macvlan'.
+# LAN_PARENT is ignored for driver 'bridge'.
+LAN_DRIVER=bridge
 # DNS search domain for LAN DHCP clients
 LAN_DOMAIN=home
 # Subnet configuration for LAN network

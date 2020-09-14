@@ -39,8 +39,10 @@ function _cleanup() {
   docker stop $CONTAINER >/dev/null
   echo "* cleaning up netns symlink"
   sudo rm -rf /var/run/netns/$CONTAINER
-  echo "* removing host macvlan interface"
-  sudo ip link del dev macvlan0
+  if [[ $LAN_DRIVER = "macvlan" ]] ; then
+    echo "* removing host macvlan interface"
+    sudo ip link del dev macvlan0
+  fi
   echo -ne "* finished"
 }
 
@@ -58,7 +60,7 @@ function _gen_config() {
 
 function _init_network() {
   echo "* setting up docker network"
-  docker network create --driver macvlan \
+  docker network create --driver $LAN_DRIVER \
     -o parent=$LAN_PARENT \
     --subnet $LAN_SUBNET \
     $LAN_NAME || exit 1
@@ -128,6 +130,22 @@ function _prepare_wifi() {
   _set_hairpin $WIFI_IFACE
 }
 
+function _prepare_lan() {
+  if [[ $LAN_DRIVER == "macvlan" ]] ; then
+    echo "* setting up host macvlan interface"
+    LAN_IFACE=macvlan0
+    sudo ip link add $LAN_IFACE link $LAN_PARENT type macvlan mode bridge
+    sudo ip link set $LAN_IFACE up
+    sudo ip route add $LAN_SUBNET dev $LAN_IFACE
+  elif [[ $LAN_DRIVER == "bridge" ]] ; then
+    LAN_ID=$(docker network inspect $LAN_NAME -f "{{.Id}}")
+    LAN_IFACE=br-${LAN_ID:0:12}
+  else
+    echo "invalid network driver type, must be 'bridge' or 'macvlan'"
+    exit 1
+  fi
+}
+
 function main() {
   cd "${SCRIPT_DIR}"
   _create_or_start_container
@@ -139,14 +157,10 @@ function main() {
   sudo ln -sf /proc/$pid/ns/net /var/run/netns/$CONTAINER
 
   _prepare_wifi
-
-  echo "* setting up host macvlan interface"
-  sudo ip link add macvlan0 link $LAN_PARENT type macvlan mode bridge
-  sudo ip link set macvlan0 up
-  sudo ip route add $LAN_SUBNET dev macvlan0
-
+  _prepare_lan
+  
   echo "* getting address via DHCP"
-  sudo dhcpcd -q macvlan0
+  sudo dhcpcd -q $LAN_IFACE
   
   _reload_fw
   echo "* ready"
