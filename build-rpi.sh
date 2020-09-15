@@ -31,7 +31,6 @@ mount_rootfs() {
 docker_build() {
 	echo "* building Docker image"
 	docker build \
-		--build-arg ROOT_PW="${ROOT_PW}" \
 		--build-arg ts="$(date)" \
 		--build-arg version="${VERSION:-$OPENWRT_SOURCE_VER}" \
 		-t ${IMAGE_TAG} -f Dockerfile.rpi ${tmpdir}

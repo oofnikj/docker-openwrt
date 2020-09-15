@@ -1,7 +1,5 @@
 FROM scratch
 COPY . .
-ARG ROOT_PW
-RUN echo -e "${ROOT_PW}\n${ROOT_PW}" | passwd
 RUN mkdir -p /var/lock
 RUN opkg update && \
     opkg install \

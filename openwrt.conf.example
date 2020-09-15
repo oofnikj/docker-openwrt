@@ -7,7 +7,6 @@ OPENWRT_SOURCE_VER=19.07.4
 IMAGE_TAG=oofnik/openwrt
 # container name 
 CONTAINER=openwrt_1
-ROOT_PW=changeme123
 
 ## Docker network settings
 # name of the WAN Docker network

@@ -14,8 +14,6 @@ rootfs.tar.gz:
 
 build: rootfs.tar.gz
 	docker build \
-		--build-arg ROOT_PW \
-		--build-arg OPENWRT_SOURCE_VER \
 		--build-arg ts="$(shell date)" \
 		--build-arg version="${OPENWRT_SOURCE_VER}" \
 		-t ${IMAGE_TAG} .
