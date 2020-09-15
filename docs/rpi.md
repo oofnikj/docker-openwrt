@@ -36,10 +36,20 @@ $ docker save $BUILD_TAG | ssh <your_raspberry_pi_host> docker load
 ```
 
 ## IPv6
-By default Raspbian does not load the kernel module for IPv6 `iptables` on boot.
+By default Raspberry Pi OS does not load the kernel module for IPv6 `iptables` on boot.
 
 Run `sudo modprobe ip6_tables` to load it immediately.
 
 To persist on reboot, run
 
     $ echo 'ip6_tables' | sudo tee /etc/modules-load.d/ip6-tables.conf
+
+## DHCP
+Raspberry Pi OS ships with a default `dhcpcd` configuration that assigns a DHCP address to every new interface added to the system including virtual ones.
+
+This is not necessarily what we want. Instead we would like to limit the interfaces `dhcpcd` watches to only the physical ones, i.e., interfaces `eth*` and `wl*`:
+
+```
+$ echo 'allowinterfaces eth* wl*' | sudo tee -a /etc/dhcpcd.conf
+$ sudo dhcpcd -n
+```
