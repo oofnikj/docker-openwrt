@@ -89,6 +89,7 @@ function _init_network() {
 }
 
 function _set_hairpin() {
+  test $WIFI_HAIRPIN = 'true' || return
   echo -n "* set hairpin mode on interface '$1'"
   for i in {1..10}; do
     echo -n '.'

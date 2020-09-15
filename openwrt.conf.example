@@ -43,6 +43,8 @@ WIFI_IFACE=wlan0
 WIFI_SSID=test123
 WIFI_ENCRYPTION=psk2
 WIFI_KEY=12345678
+# See README.md for explanation of this mode
+WIFI_HAIRPIN=false
 
 # Only one of the following sections at a time (5 / 2.4 GHz) are supported!
 ## 5GHz 802.11ac (if your hw supports it)

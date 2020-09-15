@@ -66,7 +66,8 @@ This will delete the container and all associated Docker networks so you can sta
 
 In order for WLAN clients to see one another, OpenWrt bridges all interfaces in the LAN zone and sets hairpin mode (aka [reflective relay](https://lwn.net/Articles/347344/)) on the WLAN interface, meaning packets arriving on that interface can be 'reflected' back out through the same interface.
 
-`run.sh` tries to handle this, and prints a warning if it fails.
+`run.sh` tries to handle this if `WIFI_HAIRPIN` is set to true, and prints a warning if it fails.
+Hairpin mode may not be needed in all cases, but if you experience an issue where Wi-Fi clients are unable to see each other despite AP isolation being disabled, this may fix it.
 
 ### Network namespace
 
