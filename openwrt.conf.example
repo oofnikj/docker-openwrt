@@ -20,12 +20,14 @@ UPSTREAM_DNS_SERVER=8.8.8.8
 # name of the LAN Docker network
 LAN_NAME=openwrt-lan
 # Host interface which will provide the LAN link for OpenWrt.
-# Can be a physical interface or a VLAN of the primary interface.
+# Can be a physical interface or a VLAN of the primary interface if
+# operating without a second NIC.
 # For example if WAN_PARENT is eth0, LAN_PARENT can be eth0.10 for
-# VLAN 10. VLAN interface will be created if it doesn't exist.
+# VLAN 10. VLAN interface will be created if it doesn't exist, and
+# destroyed on shutdown.
 LAN_PARENT=eth0.10
-# Docker network driver for LAN interface, either 'bridge' or 'macvlan'.
-# LAN_PARENT is ignored for driver 'bridge'.
+# Docker network driver for LAN interface, either 'bridge', 'macvlan', or 'ipvlan'.
+# Don't change this unless you have good reason.
 LAN_DRIVER=bridge
 # DNS search domain for LAN DHCP clients
 LAN_DOMAIN=home
