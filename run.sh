@@ -39,9 +39,11 @@ function _cleanup() {
   docker stop $CONTAINER >/dev/null
   echo "* cleaning up netns symlink"
   sudo rm -rf /var/run/netns/$CONTAINER
-  if [[ $LAN_DRIVER = "macvlan" ]] ; then
-    echo "* removing host macvlan interface"
-    sudo ip link del dev macvlan0
+  echo "* removing host $LAN_DRIVER interface"
+  if [[ $LAN_DRIVER != "bridge" ]] ; then
+    sudo ip link del dev $LAN_IFACE
+  elif [[ $LAN_PARENT =~ \. ]] ; then
+    sudo ip link del dev $LAN_PARENT
   fi
   echo -ne "* finished"
 }
@@ -60,8 +62,24 @@ function _gen_config() {
 
 function _init_network() {
   echo "* setting up docker network"
+  local LAN_ARGS
+  case $LAN_DRIVER in
+    bridge)
+      LAN_ARGS=""
+    ;;
+    macvlan)
+      LAN_ARGS="-o parent=$LAN_PARENT"
+    ;;
+    ipvlan)
+      LAN_ARGS="-o parent=$LAN_PARENT -o ipvlan_mode=l2"
+    ;;
+    *)
+      echo "invalid choice for LAN network driver"
+      exit 1
+    ;;
+  esac
   docker network create --driver $LAN_DRIVER \
-    -o parent=$LAN_PARENT \
+    $LAN_ARGS \
     --subnet $LAN_SUBNET \
     $LAN_NAME || exit 1
 
@@ -83,11 +101,14 @@ function _set_hairpin() {
 }
 
 function _create_or_start_container() {
-  docker inspect $IMAGE_TAG >/dev/null 2>&1 || { echo "no image '$IMAGE_TAG' found, did you forget to run 'make build'?"; exit 1; }
-  
-  if docker inspect $CONTAINER >/dev/null 2>&1; then
+  if ! docker inspect $IMAGE_TAG >/dev/null 2>&1; then
+    echo "no image '$IMAGE_TAG' found, did you forget to run 'make build'?"
+    exit 1
+
+  elif docker inspect $CONTAINER >/dev/null 2>&1; then
     echo "* starting container '$CONTAINER'"
-    docker start $CONTAINER
+    docker start $CONTAINER || exit 1
+
   else
     _init_network
     echo "* creating container $CONTAINER"
@@ -131,19 +152,39 @@ function _prepare_wifi() {
 }
 
 function _prepare_lan() {
-  if [[ $LAN_DRIVER == "macvlan" ]] ; then
-    echo "* setting up host macvlan interface"
-    LAN_IFACE=macvlan0
-    sudo ip link add $LAN_IFACE link $LAN_PARENT type macvlan mode bridge
-    sudo ip link set $LAN_IFACE up
-    sudo ip route add $LAN_SUBNET dev $LAN_IFACE
-  elif [[ $LAN_DRIVER == "bridge" ]] ; then
-    LAN_ID=$(docker network inspect $LAN_NAME -f "{{.Id}}")
-    LAN_IFACE=br-${LAN_ID:0:12}
-  else
-    echo "invalid network driver type, must be 'bridge' or 'macvlan'"
-    exit 1
-  fi
+  case $LAN_DRIVER in
+    macvlan)
+      echo "* setting up host $LAN_DRIVER interface"
+      LAN_IFACE=macvlan0
+      sudo ip link add $LAN_IFACE link $LAN_PARENT type $LAN_DRIVER mode bridge
+      sudo ip link set $LAN_IFACE up
+      sudo ip route add $LAN_SUBNET dev $LAN_IFACE
+    ;;
+    ipvlan)
+      echo "* setting up host $LAN_DRIVER interface"
+      LAN_IFACE=ipvlan0
+      sudo ip link add $LAN_IFACE link $LAN_PARENT type $LAN_DRIVER mode l2
+      sudo ip link set $LAN_IFACE up
+      sudo ip route add $LAN_SUBNET dev $LAN_IFACE
+    ;;
+    bridge)
+      LAN_ID=$(docker network inspect $LAN_NAME -f "{{.Id}}")
+      LAN_IFACE=br-${LAN_ID:0:12}
+
+      # test if $LAN_PARENT is a VLAN of $WAN_PARENT, create it if it doesn't exist and add it to the bridge
+      local lan_array=(${LAN_PARENT//./ })
+      if [[ ${lan_array[0]} = $WAN_PARENT ]] && ! ip link show $LAN_PARENT >/dev/null 2>&1 ; then
+        sudo ip link add link ${lan_array[0]} name $LAN_PARENT type vlan id ${lan_array[1]}
+      fi
+      sudo ip link set $LAN_PARENT master $LAN_IFACE
+    ;;
+    *)
+      echo "invalid network driver type, must be 'bridge' or 'macvlan'"
+      exit 1
+    ;;
+  esac
+  echo "* getting address via DHCP"
+  sudo dhcpcd -q $LAN_IFACE
 }
 
 function main() {
@@ -158,9 +199,6 @@ function main() {
 
   _prepare_wifi
   _prepare_lan
-  
-  echo "* getting address via DHCP"
-  sudo dhcpcd -q $LAN_IFACE
   
   _reload_fw
   echo "* ready"
