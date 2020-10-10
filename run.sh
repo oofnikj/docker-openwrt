@@ -48,6 +48,8 @@ function _cleanup() {
 	echo "* Rolling back ip address for main if"
 	sudo service dhcpcd start
 	sudo dhclient -r
+	test $WIFI_ENABLED = 'false' || echo "* returning $WIFI_PHY to host"
+	test $WIFI_ENABLED = 'false' || sudo iw phy "$WIFI_PHY" set netns 1
 	echo -ne "* finished"
 }
 
