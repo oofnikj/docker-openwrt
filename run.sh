@@ -88,9 +88,11 @@ function _init_network() {
 		--subnet $LAN_SUBNET \
 		$LAN_NAME || exit 1
 
-	docker network create --driver macvlan \
-		-o parent=$WAN_PARENT \
-		$WAN_NAME || exit 1
+	if [ ! -z "$WAN_PARENT" ]; then
+		docker network create --driver macvlan \
+			-o parent=$WAN_PARENT \
+			$WAN_NAME || exit 1
+	fi
 }
 
 function _set_hairpin() {
@@ -129,7 +131,9 @@ function _create_or_start_container() {
 			--sysctl net.ipv6.conf.all.disable_ipv6=0 \
 			--sysctl net.ipv6.conf.all.forwarding=1 \
 			--name $CONTAINER $IMAGE_TAG >/dev/null
-		docker network connect $WAN_NAME $CONTAINER
+		if [ ! -z "$WAN_PARENT" ]; then
+			docker network connect $WAN_NAME $CONTAINER
+		fi
 
 		_gen_config
 		docker start $CONTAINER
