@@ -45,6 +45,9 @@ function _cleanup() {
 	elif [[ $LAN_PARENT =~ \. ]] ; then
 		sudo ip link del dev $LAN_PARENT
 	fi
+	echo "* Rolling back ip address for main if"
+	sudo service dhcpcd start
+	sudo dhclient -r
 	echo -ne "* finished"
 }
 
@@ -178,14 +181,22 @@ function _prepare_lan() {
 				sudo ip link add link ${lan_array[0]} name $LAN_PARENT type vlan id ${lan_array[1]}
 			fi
 			sudo ip link set $LAN_PARENT master $LAN_IFACE
+
+			# Fix: Orignal code assumed pi would fetch new ip address from the openwrt
+			# The only way it makes sense is when working with the pi as a `workstation` and not as network device.
+			# Still, this is usable on workstation scenario but the pi should just have a static ip address that is the
+			# First address of the segment (docker bride takes .1 which will become the `main` ip for the pi) 
+			echo "* Release current IF address make sure dhcpcd does not come back and screw up ips for the host"
+			sudo service dhcpcd stop
+			sudo dhclient -r
+			echo "* Removing eth0 ip address to prevent confusion with docker bridge"
+			sudo ip addr flush dev eth0
 		;;
 		*)
 			echo "invalid network driver type, must be 'bridge' or 'macvlan'"
 			exit 1
 		;;
 	esac
-	echo "* getting address via DHCP"
-	sudo dhcpcd -q $LAN_IFACE
 }
 
 function main() {
