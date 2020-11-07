@@ -15,7 +15,8 @@
   "editable": true,
   "gnetId": 3484,
   "graphTooltip": 1,
-  "iteration": 1584446406891,
+  "id": 1,
+  "iteration": 1604692773259,
   "links": [],
   "panels": [
     {
@@ -24,7 +25,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "InfluxDB",
-      "decimals": 2,
+      "decimals": 0,
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -97,9 +98,12 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "measurement": "cpu_value",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT mean(\"value\") FROM \"cpu_value\" WHERE $timeFilter GROUP BY time($__interval), \"host\", \"instance\", \"type_instance\" fill(null)",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -145,6 +149,7 @@
       },
       "yaxes": [
         {
+          "decimals": 0,
           "format": "percent",
           "label": null,
           "logBase": 1,
@@ -2150,7 +2155,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -2179,7 +2184,7 @@
     ]
   },
   "timezone": "",
-  "title": "OpenWRT",
+  "title": "OpenWrt",
   "uid": "8JiGCU_Wz",
-  "version": 2
+  "version": 1
 }
