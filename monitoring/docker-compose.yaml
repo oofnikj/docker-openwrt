@@ -1,6 +1,7 @@
 version: "3"
 services:
   grafana:
+    container_name: grafana
     image: grafana/grafana:6.6.2
     networks:
       openwrt-lan:
@@ -15,6 +16,7 @@ services:
     restart: always
 
   influxdb:
+    container_name: influxdb
     image: influxdb:1.7
     networks:
       openwrt-lan:
