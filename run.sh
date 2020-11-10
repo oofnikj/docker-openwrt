@@ -71,6 +71,13 @@ function _init_network() {
 	case $LAN_DRIVER in
 		bridge)
 			LAN_ARGS=""
+			# Hopefully, this will set the linux bridge name, so we can configure it on the OS-level
+			#if [ ! -z "$BRIDGE_NAME" ]; then
+			LAN_ARGS='-o com.docker.network.bridge.name='
+			# BAD - I dont know bash!
+			LAN_ARGS+=${BRIDGE_NAME}
+			LAN_ARGS+=''
+			#fi
 		;;
 		macvlan)
 			LAN_ARGS="-o parent=$LAN_PARENT"
@@ -83,8 +90,13 @@ function _init_network() {
 			exit 1
 		;;
 	esac
+	# One could specify --gateway $LAN_GW here but that's WRONG
+	# specifying gateway will configure the address of the docker network gateway
+	# which is the host interface for the bridge (I.E. the bridge ip address and not the gateway)
+
 	docker network create --driver $LAN_DRIVER \
 		$LAN_ARGS \
+		--gateway $HOST_LAN_ADDR \
 		--subnet $LAN_SUBNET \
 		$LAN_NAME || exit 1
 
@@ -93,6 +105,15 @@ function _init_network() {
 			-o parent=$WAN_PARENT \
 			$WAN_NAME || exit 1
 	fi
+
+	# Here host does not matter, open-wrt manages dhcp and routing
+	#--gateway $DMZ_DOCKER_ADDR \
+	if [ ! -z "$DMZ_NET_NAME" ]; then
+		docker network create --driver macvlan \
+			--subnet $DMZ_SUBNET \
+			$DMZ_NET_NAME || exit 1
+	fi
+	
 }
 
 function _set_hairpin() {
@@ -126,14 +147,27 @@ function _create_or_start_container() {
 			--cap-add NET_RAW \
 			--hostname openwrt \
 			--dns 127.0.0.1 \
-			--ip $LAN_ADDR \
-			--sysctl net.netfilter.nf_conntrack_acct=1 \
+			--ip $LAN_ADDR \			--sysctl net.netfilter.nf_conntrack_acct=1 \
 			--sysctl net.ipv6.conf.all.disable_ipv6=0 \
 			--sysctl net.ipv6.conf.all.forwarding=1 \
 			--name $CONTAINER $IMAGE_TAG >/dev/null
+
+		# TODO: figure out how to not connect the container on `create`
+		# using --network none in create causes conteiner to be configured as isolated! not what we want
+		# so meanwhile, just disconnect the deafult network; why bridge? this is what i saw autoconnecting for me
+		#docker network disconnect bridge $CONTAINER
+
+		# TODO: can we combine `connects` in a predictable ethx manner?
+
 		if [ ! -z "$WAN_PARENT" ]; then
 			docker network connect $WAN_NAME $CONTAINER
 		fi
+
+		# if [ ! -z "$DMZ_NET_NAME" ]; then
+		# 	docker network connect --ip $DMZ_ROUTER_ADDR $DMZ_NET_NAME $CONTAINER
+		# fi
+		#docker network connect --ip $LAN_ADDR $LAN_NAME --ip $DMZ_ROUTER_ADDR $DMZ_NET_NAME $CONTAINER
+		docker network connect --ip $DMZ_ROUTER_ADDR $DMZ_NET_NAME $CONTAINER
 
 		_gen_config
 		docker start $CONTAINER
@@ -179,7 +213,9 @@ function _prepare_lan() {
 		;;
 		bridge)
 			LAN_ID=$(docker network inspect $LAN_NAME -f "{{.Id}}")
-			LAN_IFACE=br-${LAN_ID:0:12}
+			#TODO: add if $BRIDGE_NAME is empty
+			# LAN_IFACE=br-${LAN_ID:0:12}
+			LAN_IFACE=$BRIDGE_NAME
 
 			# test if $LAN_PARENT is a VLAN of $WAN_PARENT, create it if it doesn't exist and add it to the bridge
 			local lan_array=(${LAN_PARENT//./ })
@@ -197,6 +233,9 @@ function _prepare_lan() {
 			sudo dhclient -r
 			echo "* Removing eth0 ip address to prevent confusion with docker bridge"
 			sudo ip addr flush dev eth0
+			# In case open-wrt acts as a router, host shouldn't be routed to the internet, rather to the openwrt
+			echo "* Make sure host access to upstream router (May not apply in all usecases...)"
+			sudo ip route add default via $LAN_GW
 		;;
 		*)
 			echo "invalid network driver type, must be 'bridge' or 'macvlan'"
