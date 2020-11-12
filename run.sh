@@ -142,12 +142,13 @@ function _create_or_start_container() {
 		_init_network
 		echo "* creating container $CONTAINER"
 		docker create \
-			--network $LAN_NAME \
+			--network $LAN_NAME\
+			--ip $LAN_ADDR \
 			--cap-add NET_ADMIN \
 			--cap-add NET_RAW \
 			--hostname openwrt \
 			--dns 127.0.0.1 \
-			--ip $LAN_ADDR \			--sysctl net.netfilter.nf_conntrack_acct=1 \
+			--sysctl net.netfilter.nf_conntrack_acct=1 \
 			--sysctl net.ipv6.conf.all.disable_ipv6=0 \
 			--sysctl net.ipv6.conf.all.forwarding=1 \
 			--name $CONTAINER $IMAGE_TAG >/dev/null
