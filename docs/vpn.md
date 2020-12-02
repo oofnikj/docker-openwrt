@@ -13,7 +13,7 @@ mknod /dev/net/tun c 10 200' /etc/rc.local
 ## Add firewall rules
 We will be using `169.254.11.0/29` as our VPN subnet.
 
-* Allow port 1194 UDP from WAN:
+* Add `tun0` device to LAN zone and allow port 1194 UDP from WAN:
 
 ```
 # cat <<EOF | uci batch
@@ -75,7 +75,7 @@ EOF
 # easyrsa --batch gen-dh
 ```
 
-* Create a new CA
+* Create a new CA if you don't already have one
 ```
 # easyrsa --batch build-ca nopass
 ```
@@ -97,9 +97,14 @@ Repeat the last step for any additional clients.
 # cat <<EOF | uci import
 package openvpn
 config openvpn "$(echo $EASYRSA_REQ_CN | sed 's/\./_/g')"
+  option enabled "1"
+  option server "169.254.11.0 255.255.255.248"
+  option proto "udp"
+  option port "1194"
   option dev "tun"
-  option comp_lzo "yes"
+  option comp_lzo "adaptive"
   option mssfix "1420"
+  option topology "subnet"
   option keepalive "10 60"
   option verb "3"
   option user "nobody"
@@ -109,12 +114,11 @@ config openvpn "$(echo $EASYRSA_REQ_CN | sed 's/\./_/g')"
   option ca "${EASYRSA_PKI}/ca.crt"
   option cert "${EASYRSA_PKI}/issued/server.crt"
   option key "${EASYRSA_PKI}/private/server.key"
-  option enabled "1"
   option cipher "AES-128-CBC"
+  list push "comp-lzo adaptive"
   list push "redirect-gateway def1"
   list push "dhcp-option DNS $(uci get network.lan.ipaddr)"
   list push "dhcp-option DOMAIN $(uci get dhcp.@dnsmasq[0].domain)"
-  option server "169.254.11.0 255.255.255.248"
 EOF
 # /etc/init.d/openvpn restart
 ```
@@ -124,8 +128,7 @@ EOF
 # cat <<EOF > client.ovpn
 client
 dev tun
-proto udp
-remote ${EASYRSA_REQ_CN} 1194
+remote ${EASYRSA_REQ_CN} 1194 udp
 resolv-retry infinite
 user 999
 group 999
@@ -133,9 +136,9 @@ nobind
 persist-key
 persist-tun
 tls-client
+topology subnet
 remote-cert-tls server
-cipher AES-128-CBC 
-comp-lzo
+cipher AES-128-CBC
 
 <tls-crypt>
 $(cat ${EASYRSA_PKI}/tls.pem)
