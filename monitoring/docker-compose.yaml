@@ -6,8 +6,6 @@ services:
     networks:
       openwrt-lan:
         ipv4_address: $GF_ADDRESS
-    ports:
-      - "3000:3000"
     env_file:
       - .env
     volumes:

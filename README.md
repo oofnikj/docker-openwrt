@@ -73,6 +73,14 @@ Hairpin mode may not be needed in all cases, but if you experience an issue wher
 
 For `hostapd` running inside the container to have access to the physical wireless device, we need to set the device's network namespace to the PID of the running container. This causes the interface to 'disappear' from the primary network namespace for the duration of the container's parent process. `run.sh` checks if the host is using NetworkManager to manage the wifi interface, and tries to steal it away if so.
 
+### Addtional Docker services
+
+Additional containers that are run alongside OpenWrt on the same physical host are directly accessible on the LAN. No port forwarding to the host is necessary. It's recommended to add static hostnames to be able to resolve local services on your LAN.
+
+See [Monitoring with InfluxDB + Grafana](monitoring/README.md) for example.
+
+---
+
 ### Troubleshooting
 
 Logs are redirected to `stdout` so the Docker daemon can process them. They are accessible with:
