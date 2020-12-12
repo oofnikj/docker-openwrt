@@ -2,7 +2,7 @@
 
 ## General
 # OpenWrt version
-OPENWRT_SOURCE_VER=19.07.4
+OPENWRT_SOURCE_VER=19.07.5
 # image tag for pre-built Docker image, or if building locally
 IMAGE_TAG=oofnik/openwrt
 # container name 
