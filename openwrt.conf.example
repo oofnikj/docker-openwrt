@@ -1,33 +1,38 @@
 ### Sample OpenWrt config file ###
 
 ## General
-# OpenWrt version
+# OpenWrt version. Set to 'snapshot' to build from latest snapshot
 OPENWRT_SOURCE_VER=19.07.5
-# image tag for pre-built Docker image, or if building locally
+# Image tag for pre-built Docker image, or if building locally
 IMAGE_TAG=oofnik/openwrt
-# container name 
+# container name
 CONTAINER=openwrt_1
 
 ## Docker network settings
 # name of the WAN Docker network
 WAN_NAME=openwrt-wan
-# host interface which will provide the WAN link for OpenWrt
+# Docker network driver for WAN interface. Use 'macvlan' for
+# wired (Ethernet), 'ipvlan' for wireless (experimental).
+WAN_DRIVER=macvlan
+# Host interface which will provide the WAN link for OpenWrt.
 WAN_PARENT=eth0
-# upstream DNS for OpenWrt
+# upstream DNS for OpenWrt (optional, leave blank for default).
 UPSTREAM_DNS_SERVER=8.8.8.8
 
 # name of the LAN Docker network
 LAN_NAME=openwrt-lan
-# Host interface which will provide the LAN link for OpenWrt.
-# Can be a physical interface or a VLAN of the primary interface if
-# operating without a second NIC.
+# Docker network driver for LAN interface, can be one of
+# 'bridge', 'macvlan', or 'ipvlan'.
+# Don't change this unless you have good reason.
+LAN_DRIVER=bridge
+# For bridge driver, LAN_PARENT will be added to the LAN bridge.
+# For macvlan or ipvlan driver, used as LAN parent interface.
+# Can be a physical interface or a VLAN interface if
+# operating with a single NIC (router on a stick).
 # For example if WAN_PARENT is eth0, LAN_PARENT can be eth0.10 for
 # VLAN 10. VLAN interface will be created if it doesn't exist, and
 # destroyed on shutdown.
 LAN_PARENT=eth0.10
-# Docker network driver for LAN interface, either 'bridge', 'macvlan', or 'ipvlan'.
-# Don't change this unless you have good reason.
-LAN_DRIVER=bridge
 # DNS search domain for LAN DHCP clients
 LAN_DOMAIN=home
 # Subnet configuration for LAN network

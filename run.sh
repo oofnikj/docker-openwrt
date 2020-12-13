@@ -83,7 +83,7 @@ function _init_network() {
 		--subnet $LAN_SUBNET \
 		$LAN_NAME || exit 1
 
-	docker network create --driver macvlan \
+	docker network create --driver $WAN_DRIVER \
 		-o parent=$WAN_PARENT \
 		$WAN_NAME || exit 1
 }
@@ -183,6 +183,17 @@ function _prepare_lan() {
 			exit 1
 		;;
 	esac
+
+	if [[ "${WAN_DRIVER}" = "ipvlan" ]] ; then
+		echo "* 'ipvlan' mode selected for WAN interface"
+		# need to set DHCP broadcast flag
+		# https://tools.ietf.org/html/rfc1542#section-3.1.1
+		docker exec -it $CONTAINER sh -c '
+			uci set network.wan.broadcast=1
+			uci set network.wan.clientid=01af06bd
+			uci commit
+			ifup wan'
+	fi
 
 	echo "* restore resolv.conf"
 	docker exec -it $CONTAINER sh -c '
