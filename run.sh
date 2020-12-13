@@ -118,7 +118,6 @@ function _create_or_start_container() {
 			--cap-add NET_ADMIN \
 			--cap-add NET_RAW \
 			--hostname openwrt \
-			--dns 127.0.0.1 \
 			--ip $LAN_ADDR \
 			--sysctl net.netfilter.nf_conntrack_acct=1 \
 			--sysctl net.ipv6.conf.all.disable_ipv6=0 \
@@ -184,6 +183,11 @@ function _prepare_lan() {
 			exit 1
 		;;
 	esac
+
+	echo "* restore resolv.conf"
+	docker exec -it $CONTAINER sh -c '
+		cat /tmp/resolv.conf > /etc/resolv.conf'
+
 	echo "* getting address via DHCP"
 	sudo dhcpcd -q $LAN_IFACE
 }
