@@ -151,7 +151,7 @@ function _prepare_wifi() {
 	_set_hairpin $WIFI_IFACE
 }
 
-function _prepare_lan() {
+function _prepare_network() {
 	case $LAN_DRIVER in
 		macvlan)
 			echo "* setting up host $LAN_DRIVER interface"
@@ -214,7 +214,7 @@ function main() {
 	sudo ln -sf /proc/$pid/ns/net /var/run/netns/$CONTAINER
 
 	_prepare_wifi
-	_prepare_lan
+	_prepare_network
 
 	_reload_fw
 	echo "* ready"
