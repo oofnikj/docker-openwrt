@@ -187,12 +187,14 @@ function _prepare_network() {
 	if [[ "${WAN_DRIVER}" = "ipvlan" ]] ; then
 		echo "* 'ipvlan' mode selected for WAN interface"
 		# need to set DHCP broadcast flag
+		# and set clientid to some random value so we get a new lease
 		# https://tools.ietf.org/html/rfc1542#section-3.1.1
-		docker exec -it $CONTAINER sh -c '
-			uci set network.wan.broadcast=1
-			uci set network.wan.clientid=01af06bd
-			uci commit
-			ifup wan'
+		local client_id
+		client_id=$(tr -dc 'A-F0-9' < /dev/urandom | head -c12)
+		docker exec -it $CONTAINER sh -c "
+			uci -q set network.wan.broadcast=1
+			uci -q set network.wan.clientid=${client_id}
+			uci commit"
 	fi
 
 	echo "* restore resolv.conf"
