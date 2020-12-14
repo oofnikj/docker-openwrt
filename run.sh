@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # set -x
 
-function _usage() {
+_usage() {
 	echo "Could not find config file."
 	echo "Usage: $0 [/path/to/openwrt.conf]"
 	exit 1
@@ -12,7 +12,7 @@ DEFAULT_CONFIG_FILE=$SCRIPT_DIR/openwrt.conf
 CONFIG_FILE=${1:-$DEFAULT_CONFIG_FILE}
 source $CONFIG_FILE 2>/dev/null || { _usage; exit 1; }
 
-function _nmcli() {
+_nmcli() {
 	type nmcli >/dev/null 2>&1
 	if [[ $? -eq 0 ]]; then
 		echo "* setting interface '$WIFI_IFACE' to unmanaged"
@@ -21,7 +21,7 @@ function _nmcli() {
 	fi
 }
 
-function _get_phy_from_dev() {
+_get_phy_from_dev() {
 	test $WIFI_ENABLED = 'true' || return
 	test -z $WIFI_PHY || return
 	if [[ -f /sys/class/net/$WIFI_IFACE/phy80211/name ]]; then
@@ -33,7 +33,7 @@ function _get_phy_from_dev() {
 	fi
 }
 
-function _cleanup() {
+_cleanup() {
 	echo -e "\n* cleaning up..."
 	echo "* stopping container"
 	docker stop $CONTAINER >/dev/null
@@ -48,7 +48,7 @@ function _cleanup() {
 	echo -ne "* finished"
 }
 
-function _gen_config() {
+_gen_config() {
 	echo "* generating network config"
 	set -a
 	_get_phy_from_dev
@@ -60,7 +60,7 @@ function _gen_config() {
 	set +a
 }
 
-function _init_network() {
+_init_network() {
 	echo "* setting up docker network"
 	local LAN_ARGS
 	case $LAN_DRIVER in
@@ -88,7 +88,7 @@ function _init_network() {
 		$WAN_NAME || exit 1
 }
 
-function _set_hairpin() {
+_set_hairpin() {
 	test $WIFI_HAIRPIN = 'true' || return
 	echo -n "* set hairpin mode on interface '$1'"
 	for i in {1..10}; do
@@ -101,7 +101,7 @@ function _set_hairpin() {
 	fi
 }
 
-function _create_or_start_container() {
+_create_or_start_container() {
 	if ! docker inspect $IMAGE_TAG >/dev/null 2>&1; then
 		echo "no image '$IMAGE_TAG' found, did you forget to run 'make build'?"
 		exit 1
@@ -130,7 +130,7 @@ function _create_or_start_container() {
 	fi
 }
 
-function _reload_fw() {
+_reload_fw() {
 	echo "* reloading firewall rules"
 	docker exec -i $CONTAINER sh -c '
 		for iptables in iptables ip6tables; do
@@ -141,7 +141,7 @@ function _reload_fw() {
 		/sbin/fw3 -q restart'
 }
 
-function _prepare_wifi() {
+_prepare_wifi() {
 	test $WIFI_ENABLED = 'true' || return
 	test -z $WIFI_IFACE && _usage
 	_get_phy_from_dev
@@ -151,7 +151,7 @@ function _prepare_wifi() {
 	_set_hairpin $WIFI_IFACE
 }
 
-function _prepare_network() {
+_prepare_network() {
 	case $LAN_DRIVER in
 		macvlan)
 			echo "* setting up host $LAN_DRIVER interface"
@@ -205,7 +205,7 @@ function _prepare_network() {
 	sudo dhcpcd -q $LAN_IFACE
 }
 
-function main() {
+main() {
 	cd "${SCRIPT_DIR}"
 	_create_or_start_container
 
