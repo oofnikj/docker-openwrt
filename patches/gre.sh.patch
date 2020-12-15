@@ -1,0 +1,25 @@
+Subject: [PATCH] Remove kernel module check for GRE (/lib/netifd/proto/gre.sh),
+they will be loaded automatically by host kernel.
+
+---
+diff --git a/gre.sh.bak b/gre.sh
+index 3414ed3..68544bb 100755
+--- a/gre.sh.bak
++++ b/gre.sh
+@@ -289,8 +289,8 @@ proto_grev6tap_init_config() {
+ }
+ 
+ [ -n "$INCLUDE_ONLY" ] || {
+-	[ -f /lib/modules/$(uname -r)/gre.ko ] && add_protocol gre
+-	[ -f /lib/modules/$(uname -r)/gre.ko ] && add_protocol gretap
+-	[ -f /lib/modules/$(uname -r)/ip6_gre.ko ] && add_protocol grev6
+-	[ -f /lib/modules/$(uname -r)/ip6_gre.ko ] && add_protocol grev6tap
++	add_protocol gre
++	add_protocol gretap
++	add_protocol grev6
++	add_protocol grev6tap
+ }
+
+--
+2.29.1
+
