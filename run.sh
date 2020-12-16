@@ -197,10 +197,6 @@ _prepare_network() {
 			uci commit"
 	fi
 
-	echo "* restore resolv.conf"
-	docker exec -it $CONTAINER sh -c '
-		cat /tmp/resolv.conf > /etc/resolv.conf'
-
 	echo "* getting address via DHCP"
 	sudo dhcpcd -q $LAN_IFACE
 }
