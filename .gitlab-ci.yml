@@ -17,8 +17,8 @@ variables:
     - export TAG=${RELEASE}-${ARCH}
     - ./build.sh
     - docker push $CI_IMAGE:${RELEASE}-${ARCH}
-  # only:
-  #   - master
+  only:
+    - master
 
 .build-loopmount:
   extends: .build
