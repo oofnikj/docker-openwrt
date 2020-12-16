@@ -4,12 +4,10 @@ RUN mkdir -p /var/lock
 RUN opkg remove dnsmasq && \
     opkg update && \
     opkg install luci \
-      wpa-supplicant \
-      hostapd \
+      wpad \
       iw-full \
       ip-full \
       kmod-mac80211 \
-      iperf3 \
       dnsmasq-full \
       iptables-mod-checksum
 RUN opkg list-upgradable | awk '{print $1}' | xargs opkg upgrade || true
