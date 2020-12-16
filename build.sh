@@ -78,7 +78,7 @@ docker_build() {
 cleanup() {
 	rm -rf rootfs.tar.gz version.buildinfo image.img
 	if [[ -d $tmpdir ]] ; then
-		umount -q $tmpdir
+		umount -q $tmpdir || true
 		rm -rf $tmpdir
 	fi
 }
