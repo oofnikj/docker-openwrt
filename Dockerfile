@@ -1,7 +1,10 @@
 FROM scratch
 ADD rootfs.tar.gz /
 RUN mkdir -p /var/lock
-RUN opkg remove dnsmasq && \
+RUN opkg remove --force-depends \
+      dnsmasq \
+      wpad-basic \
+      iw && \
     opkg update && \
     opkg install luci \
       wpad \
