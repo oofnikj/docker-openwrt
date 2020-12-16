@@ -13,9 +13,9 @@ variables:
   script:
     - export OPENWRT_SOURCE_VER=$RELEASE
     - export ARCH=$ARCH
-    - export IMAGE_TAG=$CI_IMAGE
+    - export IMAGE=$CI_IMAGE
+    - export TAG=${RELEASE}-${ARCH}
     - ./build.sh
-    - docker tag $CI_IMAGE $CI_IMAGE:${RELEASE}-${ARCH}
     - docker push $CI_IMAGE:${RELEASE}-${ARCH}
   # only:
   #   - master
