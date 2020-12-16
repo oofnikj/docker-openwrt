@@ -20,6 +20,21 @@ variables:
   # only:
   #   - master
 
+.build-loopmount:
+  extends: .build
+  variables:
+    LOOP_ARGS: '=/tmp/dev/loop0'
+  before_script:
+    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - apk add util-linux
+    - |
+      mkdir -p /tmp/dev
+      mount -t devtmpfs none /tmp/dev
+      for i in $(seq 0 9); do
+        mknod -m 0660 "/tmp/dev/loop$i" b 7 "$i"
+      done
+
 build-release-x86-64:
   extends: .build
   variables:
@@ -34,6 +49,11 @@ build-release-armvirt-32:
   extends: .build
   variables:
     ARCH: armvirt-32
+
+build-release-bcm2708:
+  extends: .build-loopmount
+  variables:
+    ARCH: bcm2708
 
 build-snapshot-x86-64:
   extends: .build
@@ -51,4 +71,10 @@ build-snapshot-armvirt-32:
   extends: .build
   variables:
     ARCH: armvirt-32
+    RELEASE: snapshot
+
+build-snapshot-bcm2708:
+  extends: .build-loopmount
+  variables:
+    ARCH: bcm2708
     RELEASE: snapshot
