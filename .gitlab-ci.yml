@@ -1,74 +1,54 @@
 variables:
   CI_IMAGE: $DOCKER_HUB_USER/openwrt
-  CURRENT_STABLE_RELEASE: '19.07.5'
+  RELEASE: "19.07.5"
 
-build:
+.build:
   image: docker:latest
   stage: build
   services:
    - docker:dind
-  variables:
-    TAG: $CURRENT_STABLE_RELEASE-x86_64
-  before_script:
-    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
-  script:
-    - cp openwrt.conf.example openwrt.conf
-    - sed -i -E "s@(IMAGE_TAG=).+@\1$CI_IMAGE@" openwrt.conf
-    - apk add make
-    - make build
-    - docker tag $CI_IMAGE $CI_IMAGE:$TAG
-    - docker push $CI_IMAGE
-    - docker push $CI_IMAGE:$TAG
-  only:
-    - master
-
-.build-rpi:
-  image: docker:latest
-  stage: build
-  services:
-    - docker:dind
   before_script:
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
     - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-    - apk add util-linux
-    - |
-      mkdir -p /tmp/dev
-      mount -t devtmpfs none /tmp/dev
-      for i in $(seq 0 9); do
-        mknod -m 0660 "/tmp/dev/loop$i" b 7 "$i"
-      done
   script:
-    - cp openwrt.conf.example openwrt.conf
-    - sed -i -E "s@(IMAGE_TAG=).+@\1$CI_IMAGE@" openwrt.conf
-    - wget -qO- $SRC_IMAGE | gzip -d > image.img
-    - LOOP_ARGS="=/tmp/dev/loop0" ./build-rpi.sh
-    - docker tag $CI_IMAGE $CI_IMAGE:$TAG
-    - docker push $CI_IMAGE:$TAG
-  only:
-    - master
+    - export OPENWRT_SOURCE_VER=$RELEASE
+    - export ARCH=$ARCH
+    - export IMAGE_TAG=$CI_IMAGE
+    - ./build.sh
+    - docker tag $CI_IMAGE $CI_IMAGE:${RELEASE}-${ARCH}
+    - docker push $CI_IMAGE:${RELEASE}-${ARCH}
+  # only:
+  #   - master
 
-build-rpi2:
-  extends: .build-rpi
+build-release-x86-64:
+  extends: .build
   variables:
-    SRC_IMAGE: http://downloads.openwrt.org/releases/${CURRENT_STABLE_RELEASE}/targets/brcm2708/bcm2709/openwrt-${CURRENT_STABLE_RELEASE}-brcm2708-bcm2709-rpi-2-ext4-factory.img.gz
-    TAG: rpi2
+    ARCH: x86-64
 
-build-rpi3:
-  extends: .build-rpi
+build-release-armvirt-64:
+  extends: .build
   variables:
-    SRC_IMAGE: https://downloads.openwrt.org/releases/${CURRENT_STABLE_RELEASE}/targets/brcm2708/bcm2710/openwrt-${CURRENT_STABLE_RELEASE}-brcm2708-bcm2710-rpi-3-ext4-factory.img.gz
-    TAG: rpi3
+    ARCH: armvirt-64
 
-build-rpi4:
-  extends: .build-rpi
+build-release-armvirt-32:
+  extends: .build
   variables:
-    SRC_IMAGE: https://downloads.openwrt.org/snapshots/targets/bcm27xx/bcm2711/openwrt-bcm27xx-bcm2711-rpi-4-ext4-factory.img.gz
-# no stable release for RPi 4 (yet), so we use snapshot
-    VERSION: snapshot
-    TAG: rpi4
+    ARCH: armvirt-32
 
-build-rpi:
-  extends: .build-rpi
+build-snapshot-x86-64:
+  extends: .build
   variables:
-    SRC_IMAGE: https://downloads.openwrt.org/releases/$CURRENT_STABLE_RELEASE/targets/brcm2708/bcm2708/openwrt-$CURRENT_STABLE_RELEASE-brcm2708-bcm2708-rpi-ext4-factory.img.gz
-    TAG: rpi
+    ARCH: x86-64
+    RELEASE: snapshot
+
+build-snapshot-armvirt-64:
+  extends: .build
+  variables:
+    ARCH: armvirt-64
+    RELEASE: snapshot
+
+build-snapshot-armvirt-32:
+  extends: .build
+  variables:
+    ARCH: armvirt-32
+    RELEASE: snapshot
