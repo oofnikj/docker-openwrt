@@ -7,6 +7,9 @@ RUN opkg update && \
       iperf3 \
       ip-full
 RUN  opkg list-upgradable | awk '{print $1}' | xargs opkg upgrade || true
+
+RUN sed -i '/^exit 0/i cat \/tmp\/resolv.conf > \/etc\/resolv.conf' /etc/rc.local
+
 ARG ts
 ARG version
 LABEL org.opencontainers.image.created=$ts
