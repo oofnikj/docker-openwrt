@@ -2,7 +2,7 @@ version: "3"
 services:
   grafana:
     container_name: grafana
-    image: grafana/grafana:6.6.2
+    image: grafana/grafana:7.3.5
     networks:
       openwrt-lan:
         ipv4_address: $GF_ADDRESS
