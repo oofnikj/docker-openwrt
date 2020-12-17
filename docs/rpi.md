@@ -1,38 +1,31 @@
-# Building on Raspberry Pi
+# Raspberry Pi Instructions
 
 Turn your Pi into a pretty okay-ish travel router (or a very slow main router)!
 
-OpenWrt officially supports Raspberry Pi hardware if you want to run it as your OS. But running in a container brings many advantages, one of which is not having to re-flash your SD card.
+OpenWrt officially supports Raspberry Pi hardware if you want to run it as your primary OS. But running in a container brings many advantages, one of which is not having to re-flash your SD card if you already have some services running.
 
-This has been tested on a Raspberry Pi Zero W running Raspbian Lite, but should work for other versions too. Just make sure you download the right image for your Pi version (refer to the notes in [build-rpi.sh](./build-rpi.sh)).
+Pre-built images are available on Docker Hub. These images have been tested on a Zero W and Pi 4 running Raspberry Pi OS, but should work for other versions too. Refer to the table below (and the notes in [openwrt.conf](../openwrt.conf.example)) to choose the right image for your hardware.
 
-**UPDATE 2020-08-28**: Pre-built images are now available on Docker Hub! Refer to the table below to choose the right image. Set the `BUILD_TAG` parameter in openwrt.conf accordingly:
+Set the `IMAGE` and `TAG` variables in openwrt.conf accordingly, replacing `<version>` with the desired release version (e.g. "19.07.5") or "snapshot" for the latest development snapshot:
 
-| RPi version             | image:tag                |
-|------------------------|---------------------------|
-| Pi A / B / B+ / Zero W | `oofnik/openwrt:rpi`      |
-| Pi 2 B (all)           | `oofnik/openwrt:rpi2`     |
-| Pi 3 B / B+            | `oofnik/openwrt:rpi3`     |
-| Pi 4 / 4B              | `oofnik/openwrt:rpi4`     |
+| RPi version              | image:tag                             |
+|--------------------------|---------------------------------------|
+| Pi A / B / B+ / Zero W   | `oofnik/openwrt:<version>-bcm2708`    |
+| Pi 2 / 3 / 4 (32-bit OS) | `oofnik/openwrt:<version>-armvirt-32` |
+| Pi 3 / 4 (64-bit OS)     | `oofnik/openwrt:<version>-armvirt-64` |
 
-**NOTE** that OpenWrt images for the Pi 3 and 4 are built for 64-bit kernels. If you are running Raspberry Pi OS 32-bit, you will be unable to run these images. It's perfectly fine to run the Pi Zero or Pi 2 images, however.
 
 ---
 ## Build 
-You can build the OpenWRT docker image on the Pi itself, or on your x86 PC with `qemu-user` and `binfmt-support` installed.
+You can build the OpenWrt Docker image yourself on the Pi, or on your x86 PC with `qemu-user` and `binfmt-support` installed. The image will be built according to the parameters `OPENWRT_SOURCE_VER`, `ARCH`, `IMAGE` and `TAG` (see [openwrt.conf](../openwrt.conf.example) for documentation). Note that target `bcm2708` requires root privileges.
 
-First download and extract the OpenWRT factory image for your Pi. Refer to the [OpenWrt Table of Hardware](https://openwrt.org/toh/raspberry_pi_foundation/raspberry_pi) to choose the right image. Then run the `make` target as root (need access to mount loop filesystems).
-
-The variable `RPI_SOURCE_IMG` can be specified in openwrt.conf or on the command line (defaults to `image.img`):
-```
-$ wget https://downloads.openwrt.org/releases/19.07.4/targets/brcm2708/bcm2708/openwrt-19.07.4-brcm2708-bcm2708-rpi-ext4-factory.img.gz -O image.img.gz
-$ gzip -d image.img.gz
-$ sudo make build-rpi
+```shell
+$ make build
 ```
 
-If you built the image on your PC, send it to your Raspberry Pi over SSH (`$BUILD_TAG` is a config variable):
+If you built the image on your PC, send it to your Raspberry Pi over SSH:
 ```
-$ docker save $BUILD_TAG | ssh <your_raspberry_pi_host> docker load
+$ docker save $IMAGE:$TAG | ssh <your_raspberry_pi_host> docker load
 ```
 
 ## IPv6

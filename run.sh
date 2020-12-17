@@ -102,8 +102,8 @@ _set_hairpin() {
 }
 
 _create_or_start_container() {
-	if ! docker inspect $IMAGE_TAG >/dev/null 2>&1; then
-		echo "no image '$IMAGE_TAG' found, did you forget to run 'make build'?"
+	if ! docker inspect $IMAGE:$TAG >/dev/null 2>&1; then
+		echo "no image '$IMAGE:$TAG' found, did you forget to run 'make build'?"
 		exit 1
 
 	elif docker inspect $CONTAINER >/dev/null 2>&1; then
@@ -122,7 +122,7 @@ _create_or_start_container() {
 			--sysctl net.netfilter.nf_conntrack_acct=1 \
 			--sysctl net.ipv6.conf.all.disable_ipv6=0 \
 			--sysctl net.ipv6.conf.all.forwarding=1 \
-			--name $CONTAINER $IMAGE_TAG >/dev/null
+			--name $CONTAINER $IMAGE:$TAG >/dev/null
 		docker network connect $WAN_NAME $CONTAINER
 
 		_gen_config

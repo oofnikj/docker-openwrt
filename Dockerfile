@@ -1,10 +1,13 @@
 FROM scratch
 ADD rootfs.tar.gz /
 RUN mkdir -p /var/lock
-RUN opkg remove dnsmasq && \
+RUN opkg remove --force-depends \
+      dnsmasq* \
+      wpad* \
+      iw* && \
     opkg update && \
     opkg install luci \
-      wpad \
+      wpad-wolfssl \
       iw-full \
       ip-full \
       kmod-mac80211 \

@@ -3,8 +3,13 @@
 ## General
 # OpenWrt version. Set to 'snapshot' to build from latest snapshot
 OPENWRT_SOURCE_VER=19.07.5
-# Image tag for pre-built Docker image, or if building locally
-IMAGE_TAG=oofnik/openwrt
+# Architecture: one of x86-64, armvirt-32 (Raspberry Pi 2 / 3 / 4),
+# armvirt-64 (Raspberry Pi 3 / 4 running 64-bit OS, ODroid-C2 or similar),
+# or bcm2708 (Raspberry Pi Zero)
+ARCH=x86-64
+# Image & tag for pre-built Docker image, or if building locally
+IMAGE=oofnik/openwrt
+TAG=latest
 # container name
 CONTAINER=openwrt_1
 
