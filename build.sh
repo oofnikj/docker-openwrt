@@ -7,7 +7,7 @@ download_rootfs() {
 		snapshot)
 		# special snowflake raspberry pi zero
 			if [[ $ARCH = "bcm2708" ]] ; then
-				img_url="https://downloads.openwrt.org/snapshots/targets/bcm27xx/bcm2708/openwrt-bcm27xx-bcm2708-rpi-ext4-factory.img.gz"
+				img_url="https://downloads.openwrt.org/snapshots/targets/bcm27xx/bcm2708/openwrt-bcm27xx-bcm2708-rpi-squashfs-factory.img.gz"
 				version="https://downloads.openwrt.org/snapshots/targets/bcm27xx/bcm2708/version.buildinfo"
 				gen_rootfs_from_img
 				return
@@ -27,7 +27,7 @@ download_rootfs() {
 		;;
 		*)
 			if [[ $ARCH = "bcm2708" ]] ; then
-				img_url="https://downloads.openwrt.org/releases/${OPENWRT_SOURCE_VER}/targets/brcm2708/bcm2708/openwrt-${OPENWRT_SOURCE_VER}-brcm2708-bcm2708-rpi-ext4-factory.img.gz"
+				img_url="https://downloads.openwrt.org/releases/${OPENWRT_SOURCE_VER}/targets/brcm2708/bcm2708/openwrt-${OPENWRT_SOURCE_VER}-brcm2708-bcm2708-rpi-squashfs-factory.img.gz"
 				version="https://downloads.openwrt.org/releases/${OPENWRT_SOURCE_VER}/targets/brcm2708/bcm2708/version.buildinfo"
 				gen_rootfs_from_img
 				return
@@ -50,22 +50,13 @@ download_rootfs() {
 	wget "${version}" -O version.buildinfo
 }
 
-check_uid() {
-	if [[ $(id -u) -ne 0 ]]; then
-		echo "this script requires root privileges"
-		exit 1
-	fi
-}
-
 gen_rootfs_from_img() {
-	check_uid
 	local offset
 	wget "${img_url}" -O- | gzip -d > image.img
 	wget "${version}" -O version.buildinfo
-	mkdir -p "${tmpdir}"
 	offset=$(sfdisk -d image.img | grep "image.img2" | sed -E 's/.*start=\s+([0-9]+).*/\1/g')
-	mount -o loop"${LOOP_ARGS}",offset=$((512 * $offset)) -t ext4 image.img ${tmpdir}
-	tar czf rootfs.tar.gz -C ${tmpdir} .
+	fakeroot unsquashfs -no-progress -quiet -offset $(( 512 * $offset )) -dest ${tmpdir} image.img
+	fakeroot tar czf rootfs.tar.gz -C ${tmpdir} .
 }
 
 docker_build() {
@@ -78,7 +69,6 @@ docker_build() {
 cleanup() {
 	rm -rf rootfs.tar.gz version.buildinfo image.img
 	if [[ -d $tmpdir ]] ; then
-		umount -q $tmpdir || true
 		rm -rf $tmpdir
 	fi
 }

@@ -17,7 +17,7 @@ Set the `IMAGE` and `TAG` variables in openwrt.conf accordingly, replacing `<ver
 
 ---
 ## Build 
-You can build the OpenWrt Docker image yourself on the Pi, or on your x86 PC with `qemu-user` and `binfmt-support` installed. The image will be built according to the parameters `OPENWRT_SOURCE_VER`, `ARCH`, `IMAGE` and `TAG` (see [openwrt.conf](../openwrt.conf.example) for documentation). Note that target `bcm2708` requires root privileges.
+You can build the OpenWrt Docker image yourself on the Pi, or on your x86 PC with `qemu-user` and `binfmt-support` installed. The image will be built according to the parameters `OPENWRT_SOURCE_VER`, `ARCH`, `IMAGE` and `TAG` (see [openwrt.conf](../openwrt.conf.example) for documentation). Packages `fakeroot` and `squashfs-tools` must be installed.
 
 ```shell
 $ make build
