@@ -7,7 +7,7 @@ download_rootfs() {
 		snapshot)
 		# special snowflake raspberry pi zero
 			if [[ $ARCH = "bcm2708" ]] ; then
-				img_url="https://downloads.openwrt.org/snapshots/targets/bcm27xx/bcm2708/openwrt-bcm27xx-bcm2708-rpi-ext4-factory.img.gz"
+				img_url="https://downloads.openwrt.org/snapshots/targets/bcm27xx/bcm2708/openwrt-bcm27xx-bcm2708-rpi-squashfs-factory.img.gz"
 				version="https://downloads.openwrt.org/snapshots/targets/bcm27xx/bcm2708/version.buildinfo"
 				gen_rootfs_from_img
 				return
