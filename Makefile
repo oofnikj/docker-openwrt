@@ -1,4 +1,4 @@
-.PHONY: build build-rpi run clean install uninstall
+.PHONY: build run clean install uninstall
 
 include openwrt.conf
 export
