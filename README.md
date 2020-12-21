@@ -63,7 +63,6 @@ This will delete the container and all associated Docker networks so you can sta
 
 ### Hairpinning
 
-
 In order for WLAN clients to see one another, OpenWrt bridges all interfaces in the LAN zone and sets hairpin mode (aka [reflective relay](https://lwn.net/Articles/347344/)) on the WLAN interface, meaning packets arriving on that interface can be 'reflected' back out through the same interface.
 
 `run.sh` tries to handle this if `WIFI_HAIRPIN` is set to true, and prints a warning if it fails.
@@ -78,6 +77,10 @@ For `hostapd` running inside the container to have access to the physical wirele
 Additional containers that are run alongside OpenWrt on the same physical host are directly accessible on the LAN. No port forwarding to the host is necessary. It's recommended to add static hostnames to be able to resolve local services on your LAN.
 
 See [Monitoring with InfluxDB + Grafana](monitoring/README.md) for example.
+
+### Upgrading
+
+Read the [upgrade guide](docs/upgrade.md).
 
 ---
 
