@@ -1,6 +1,6 @@
 variables:
   CI_IMAGE: $DOCKER_HUB_USER/openwrt
-  RELEASE: "19.07.5"
+  RELEASE: "19.07.6"
 
 .build:
   image: docker:latest
