@@ -55,7 +55,7 @@ gen_rootfs_from_img() {
 	wget "${img_url}" -O- | gzip -d > image.img
 	wget "${version}" -O version.buildinfo
 	offset=$(sfdisk -d image.img | grep "image.img2" | sed -E 's/.*start=\s+([0-9]+).*/\1/g')
-	fakeroot unsquashfs -no-progress -quiet -offset $(( 512 * "$offset" )) -dest "$tmpdir" image.img
+	fakeroot unsquashfs -no-progress -quiet -offset $(( 512 * offset )) -dest "$tmpdir" image.img
 	fakeroot tar czf rootfs.tar.gz -C "$tmpdir" .
 }
 
