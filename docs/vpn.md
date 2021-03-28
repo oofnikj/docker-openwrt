@@ -11,7 +11,7 @@ mknod /dev/net/tun c 10 200' /etc/rc.local
 
 
 ## Add firewall rules
-We will be using `169.254.11.0/29` as our VPN subnet.
+We will be using `10.16.0.0/24` as our VPN subnet.
 
 * Add `tun0` device to LAN zone and allow port 1194 UDP from WAN:
 
@@ -41,7 +41,7 @@ set firewall.ovpn_nat=nat
 set firewall.ovpn_nat.target='MASQUERADE'
 set firewall.ovpn_nat.src='*'
 set firewall.ovpn_nat.name='OpenVPN-NAT'
-set firewall.ovpn_nat.src_ip='169.254.11.0/29'
+set firewall.ovpn_nat.src_ip='10.16.0.0/24'
 commit firewall
 EOF
 # /etc/init.d/firewall restart
@@ -98,7 +98,7 @@ Repeat the last step for any additional clients.
 package openvpn
 config openvpn "$(echo $EASYRSA_REQ_CN | sed 's/\./_/g')"
   option enabled "1"
-  option server "169.254.11.0 255.255.255.248"
+  option server "10.16.0.0 255.255.255.0"
   option proto "udp"
   option port "1194"
   option dev "tun"
