@@ -14,6 +14,11 @@ TAG=latest
 CONTAINER=openwrt_1
 
 ## Docker network settings
+# Disable will not connect WAN interface to container.
+# Usually be used when there is only one eth interface, 
+# and the DHCP server and gateway already exist in the network. 
+# It is recommended to set the LAN_GW when disable WAN
+WAN_ENABLED=true
 # name of the WAN Docker network
 WAN_NAME=openwrt-wan
 # Docker network driver for WAN interface. Use 'macvlan' for
@@ -47,6 +52,8 @@ LAN_SUBNET=192.168.16.0/24
 LAN_ADDR=192.168.16.2
 # openwrt doesn't accept CIDR notation; must match LAN_SUBNET
 LAN_NETMASK=255.255.255.0
+# LAN gateway, empty when openwrt is the gateway
+LAN_GW=
 
 ## Wifi settings
 WIFI_ENABLED=true

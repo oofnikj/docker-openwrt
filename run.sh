@@ -78,14 +78,21 @@ _init_network() {
 			exit 1
 		;;
 	esac
+
+	if [[ ! -z "$LAN_GW" ]] ; then
+		LAN_ARGS="$LAN_ARGS --gateway $LAN_GW"
+	fi
+
 	docker network create --driver $LAN_DRIVER \
 		$LAN_ARGS \
 		--subnet $LAN_SUBNET \
 		$LAN_NAME || exit 1
 
-	docker network create --driver $WAN_DRIVER \
-		-o parent=$WAN_PARENT \
-		$WAN_NAME || exit 1
+	if [[ "$WAN_ENABLED" = 'true' ]]; then
+		docker network create --driver $WAN_DRIVER \
+			-o parent=$WAN_PARENT \
+			$WAN_NAME || exit 1
+	fi
 }
 
 _set_hairpin() {
@@ -123,7 +130,10 @@ _create_or_start_container() {
 			--sysctl net.ipv6.conf.all.disable_ipv6=0 \
 			--sysctl net.ipv6.conf.all.forwarding=1 \
 			--name $CONTAINER $IMAGE:$TAG >/dev/null
-		docker network connect $WAN_NAME $CONTAINER
+
+		if [[ $WAN_ENABLED = 'true' ]]; then
+			docker network connect $WAN_NAME $CONTAINER
+		fi
 
 		_gen_config
 		docker start $CONTAINER
@@ -184,7 +194,7 @@ _prepare_network() {
 		;;
 	esac
 
-	if [[ "${WAN_DRIVER}" = "ipvlan" ]] ; then
+	if [[ $WAN_ENABLED = 'true' ]] && [[ "${WAN_DRIVER}" = "ipvlan" ]] ; then
 		echo "* 'ipvlan' mode selected for WAN interface"
 		# need to set DHCP broadcast flag
 		# and set clientid to some random value so we get a new lease
