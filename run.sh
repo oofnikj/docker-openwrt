@@ -124,6 +124,7 @@ _create_or_start_container() {
 			--network $LAN_NAME \
 			--cap-add NET_ADMIN \
 			--cap-add NET_RAW \
+			--cap-add SYS_RESOURCE \
 			--hostname openwrt \
 			--ip $LAN_ADDR \
 			--sysctl net.netfilter.nf_conntrack_acct=1 \
