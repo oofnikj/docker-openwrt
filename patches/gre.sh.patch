@@ -4,8 +4,8 @@ they will be loaded automatically by host kernel.
 ---
 diff --git a/gre.sh.bak b/gre.sh
 index 3414ed3..68544bb 100755
---- a/gre.sh.bak
-+++ b/gre.sh
+--- a/lib/netifd/proto/gre.sh
++++ b/lib/netifd/proto/gre.sh
 @@ -289,8 +289,8 @@ proto_grev6tap_init_config() {
  }
  
