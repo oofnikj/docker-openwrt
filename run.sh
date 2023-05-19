@@ -122,7 +122,7 @@ _create_or_start_container() {
 			--sysctl net.netfilter.nf_conntrack_acct=1 \
 			--sysctl net.ipv6.conf.all.disable_ipv6=0 \
 			--sysctl net.ipv6.conf.all.forwarding=1 \
-			--name $CONTAINER $IMAGE:$TAG >/dev/null
+			${ADDITIONAL_DOCKER_CREATE_ARGS} --name $CONTAINER $IMAGE:$TAG >/dev/null
 		docker network connect $WAN_NAME $CONTAINER
 
 		_gen_config

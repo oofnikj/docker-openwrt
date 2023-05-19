@@ -12,6 +12,8 @@ IMAGE=oofnik/openwrt
 TAG=latest
 # container name
 CONTAINER=openwrt_1
+# optional additional Docker create args, e.g. for PPPoE "--device /dev/ppp"
+ADDITIONAL_DOCKER_CREATE_ARGS=""
 
 ## Docker network settings
 # name of the WAN Docker network
